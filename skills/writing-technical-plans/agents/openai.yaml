@@ -1,0 +1,4 @@
+interface:
+  display_name: "Writing Technical Plans"
+  short_description: "Unified architecture and build plans"
+  default_prompt: "Use $writing-technical-plans to create or revise one decision-complete plan spanning architecture through implementation."
