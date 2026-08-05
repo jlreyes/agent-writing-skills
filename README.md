@@ -2,12 +2,13 @@
 
 [![skills.sh](https://skills.sh/b/jlreyes/agent-writing-skills)](https://skills.sh/jlreyes/agent-writing-skills)
 
-Four composable skills for writing instructions, documentation, reports, and
-technical plans with coding agents. Each skill owns one writing problem and can
-be installed independently.
+Five composable skills for editing existing documents and producing agent
+rules, technical documentation, reports, and plans. Each skill owns one writing
+problem and can be installed independently.
 
 | Skill | Use it for |
 | --- | --- |
+| `editing-documents` | Targeted revisions that preserve unrelated structure, detail, and intent |
 | `writing-agent-rules` | Rules, skills, system prompts, working agreements, and other text that controls agent behavior |
 | `writing-technical-documentation` | Durable technical documentation organized by reader purpose and, for agent repositories, by how context is loaded |
 | `writing-user-facing-reports` | Reports and analyses crossing the agent-to-user boundary |
@@ -40,6 +41,9 @@ to select a particular supported agent.
 
 The skills share vocabulary but not ownership:
 
+- `editing-documents` applies whenever an existing long-form document is being
+  changed. Pair it with the genre-specific skill that governs what the document
+  must accomplish.
 - `writing-agent-rules` applies when text instructs an agent. It does not apply
   merely because an agent is the author.
 - `writing-technical-documentation` classifies durable documentation by reader

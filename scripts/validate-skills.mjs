@@ -9,6 +9,7 @@ const entries = (await readdir(root, { withFileTypes: true }))
   .sort((a, b) => a.name.localeCompare(b.name));
 
 const expected = [
+  "editing-documents",
   "writing-agent-rules",
   "writing-technical-documentation",
   "writing-technical-plans",
