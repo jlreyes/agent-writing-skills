@@ -1,0 +1,139 @@
+[
+  {
+    "id": "completion-after-messy-implementation",
+    "reference": "core",
+    "handoff": "The user asked us to fix garden reminders firing in the wrong timezone. The fix is complete: new reminders use the timezone the user selected, unit tests and a manual smoke test pass, and reminders created before August 1 must be recreated. The handoff does not establish where or when the timezone was selected; keep that underspecified. Internal chronology and names that the user never saw: ReminderPump, queueTick, clock adapters, three failed patches.",
+    "criteria": [
+      "Lead with the completed outcome.",
+      "State the limitation for reminders created before August 1.",
+      "Do not add a year or claim where the timezone was selected.",
+      "Do not expose internal names or debugging chronology."
+    ]
+  },
+  {
+    "id": "binary-decision-after-debugging",
+    "reference": "core",
+    "handoff": "Ask the product owner one decision after resolving a broken-link migration: should old shared links redirect for 90 days, which preserves bookmarks but requires a compatibility route, or stop working at launch, which is simpler but breaks saved links? Internal terms RouteShimV2 and legacySlugHydrator are not reader-facing.",
+    "criteria": [
+      "Ask one explicit binary decision.",
+      "Give the user-visible tradeoff for each option.",
+      "Omit internal component names."
+    ]
+  },
+  {
+    "id": "failure-with-internal-terminology",
+    "reference": "core",
+    "handoff": "The user's calendar sync did not complete because their authorization expired. No events were changed. They need to reconnect the calendar and retry. Internal evidence: OAuthRefreshCoordinator returned AUTH_STALE at SyncStage 4 after two backoff cycles.",
+    "criteria": [
+      "Say plainly that sync did not complete and no events changed.",
+      "Give the reconnect-and-retry action.",
+      "Omit internal codes, stages, and class names."
+    ]
+  },
+  {
+    "id": "short-recommendation",
+    "reference": "core",
+    "handoff": "The user asks whether to keep an export as CSV or switch to JSON. Their stated audience uses spreadsheets, the schema is flat, and no downstream API consumes it. Recommend CSV, with one sentence explaining why and one condition that would justify JSON later.",
+    "criteria": [
+      "Recommend CSV immediately.",
+      "Keep the answer proportionate to a small decision.",
+      "Name a concrete future condition for reconsidering JSON."
+    ]
+  },
+  {
+    "id": "cold-review-corporate-correspondence",
+    "reference": "core",
+    "forbiddenReferences": [
+      "reports"
+    ],
+    "handoff": "Cold-review this existing vendor email for reader-first organization and voice. Return three to five consequential findings with the smallest useful fixes; do not rewrite it or infer facts outside the text.\n\nHello Priya,\n\nThank you for your continued partnership as we align on the next phase of this engagement.\n\n1. ORGANIZATION OVERVIEW\n\nHarbor Works operates at the intersection of commerce and innovation, delivering next-generation logistics solutions to enterprise stakeholders.\n\n2. STRATEGIC CONTEXT\n\nThe upcoming workshop represents an important milestone in our broader transformation journey and is material to our cross-functional enablement roadmap.\n\n3. REQUESTED SCHEDULING ADJUSTMENT\n\nPlease move the onboarding workshop from September 8 to September 15 because our operations lead is unavailable on the original date.\n\nWe appreciate your flexibility and remain committed to a successful partnership.\n\nBest regards,\nAlex",
+    "criteria": [
+      "Identify that the September 15 scheduling request is buried and should lead the email.",
+      "Identify the numbered memo headings and generic innovation, enterprise, or transformation framing as an artificial register for direct vendor correspondence.",
+      "Recommend the concrete scheduling reason and action instead of market positioning or inflated partnership language.",
+      "Do not treat the email as a report or invent a more specific sender voice."
+    ]
+  },
+  {
+    "id": "research-report",
+    "reference": "reports",
+    "handoff": "Write a short research synthesis for a CTO deciding whether to pilot passkeys. Source A, the platform vendor documentation, says passkeys resist phishing. Source B, a 14-person customer interview sample, found 9 understood biometric sign-in but only 3 recognized the term passkey. The sample is directional, not representative. Recommend a bounded pilot with user-facing language tests, preserving the evidence limits.",
+    "criteria": [
+      "Lead with the qualified recommendation.",
+      "Keep vendor evidence and interview observation distinct.",
+      "Place the sample-size limitation next to the interview claim."
+    ]
+  },
+  {
+    "id": "technical-plan",
+    "reference": "technical-plans",
+    "handoff": "Draft a compact implementation plan for adding per-account API rate limits. Decisions already made: token bucket, limits stored in existing account policy records, gateway is the sole enforcer, over-limit requests return 429 with Retry-After, dark launch metrics for one week before enforcement. Open gate: exact default limit requires product approval. Unknowns that must remain open: whether the existing policy schema needs changes, what holds bucket state, how dark launch switches to enforcement, and whether default approval also blocks dark launch. Each unknown blocks only work that depends on it; unrelated work may proceed. Do not invent additional services or a generic architecture template.",
+    "criteria": [
+      "Include only decisions and steps an implementer needs.",
+      "Make the product-approval gate visible before enforcement.",
+      "Do not invent another service or resolve the stated schema, state, gate-scope, or switching unknowns.",
+      "Scope each open question to its dependent work rather than declaring a global block.",
+      "Connect the chosen contracts to verification and rollout."
+    ]
+  },
+  {
+    "id": "edit-existing-artifact",
+    "reference": "editing",
+    "handoff": "Edit only the installation command in this text, changing acme-cli@2 to acme-cli@3: '# Install\nRun `npm install acme-cli@2`. This keeps the existing configuration and does not migrate stored credentials.\n\n# Troubleshooting\nIf login fails, run `acme doctor` and inspect the reported account.' Preserve all unrelated wording and structure.",
+    "criteria": [
+      "Change only the requested version.",
+      "Preserve the credential caveat and troubleshooting section verbatim.",
+      "Do not perform an unsolicited rewrite."
+    ]
+  },
+  {
+    "id": "citations-and-uncertainty",
+    "reference": "reports",
+    "handoff": "Answer whether Tool X supports offline mode. Official documentation at https://example.com/tool-x/offline says cached documents remain readable offline. A maintainer issue at https://example.com/tool-x/issues/42 says edits queue for later sync, but the issue is still open. We did not test conflict resolution. Preserve both links and do not claim that offline editing is fully reliable.",
+    "criteria": [
+      "Preserve both source links near the claims they support.",
+      "Distinguish documented reading from the unresolved editing report.",
+      "State that conflict resolution was not tested."
+    ]
+  },
+  {
+    "id": "implementation-detail-must-survive",
+    "reference": "core",
+    "handoff": "The reader is the maintainer choosing a password-hash migration. The security review established that stored hashes use bcrypt cost 10 and the proposed target is Argon2id with 64 MiB memory, 3 iterations, and parallelism 1. These exact parameters affect compatibility and rollout and must appear. The discarded benchmark harness name HashRaceLab should not.",
+    "criteria": [
+      "Preserve the existing and proposed hashing parameters exactly.",
+      "Explain why they matter to the maintainer's decision.",
+      "Omit the irrelevant harness name."
+    ]
+  },
+  {
+    "id": "missing-material-fact",
+    "reference": "core",
+    "handoff": "The user asks when the mobile release will reach the app store. The build passed internal testing, but no submission date or review estimate is available in the handoff. Write the response without researching or inventing a date.",
+    "criteria": [
+      "Say what is established about testing.",
+      "Make the missing schedule information explicit.",
+      "Do not invent a release date or review estimate."
+    ]
+  },
+  {
+    "id": "respect-prior-reader-context",
+    "reference": "core",
+    "handoff": "The user has already chosen the hosted deployment option and now asks whether the setup is finished. It is finished and the health check passes. The only next step is for them to add their first teammate. Do not re-explain hosted versus self-hosted deployment.",
+    "criteria": [
+      "Answer that setup is finished.",
+      "Give the one useful next step.",
+      "Do not repeat the decision the reader already made."
+    ]
+  },
+  {
+    "id": "blocked-status-with-action",
+    "reference": "core",
+    "handoff": "The user asked to deploy the preview. The build succeeded, but deployment did not run because the CLI has no authenticated account. Nothing was published. Ask the user to authenticate the CLI, after which the deployment can be retried. Internal details: DeployGate threw CredentialSlotEmpty after preflight 7b.",
+    "criteria": [
+      "Lead with the fact that nothing was deployed.",
+      "Distinguish the successful build from the blocked deployment.",
+      "Ask for the specific action without exposing internal errors."
+    ]
+  }
+]

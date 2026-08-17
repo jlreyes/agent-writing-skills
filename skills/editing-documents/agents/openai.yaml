@@ -1,4 +1,0 @@
-interface:
-  display_name: "Editing Documents"
-  short_description: "Make targeted edits without collateral rewrites"
-  default_prompt: "Use $editing-documents to revise this document with targeted, preservation-first edits."

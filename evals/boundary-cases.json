@@ -1,0 +1,50 @@
+[
+  {
+    "id": "fresh-skill-discovery",
+    "prompt": "Before drafting, open and follow the installed agent-writing:writing SKILL.md and its required references/style.md. Then write a concise response to a user explaining that the Retry button is temporarily disabled after an authentication failure to prevent repeated failures, and becomes available once their sign-in state changes. Return only the finished response.",
+    "expectSkill": true,
+    "expectDelegation": false,
+    "expectedReads": [
+      "references/style.md"
+    ],
+    "readCanaries": {
+      "references/style.md": "# Universal style pass"
+    }
+  },
+  {
+    "id": "durable-agent-instruction",
+    "prompt": "Materially revise the durable agent instruction at {fixture}. The audience is coding agents. The intended behavior is to stop after the first authentication failure, ask the user to sign in, and retry only after authentication state changes. The concrete failure is an agent repeatedly retrying a deployment that cannot authenticate. Preserve unrelated instructions. This exact file is the designated source; no other project file is source material. Return only the revised file.",
+    "codexPromptPrefix": "Use the installed agent-writing:writing skill for this task and explicitly delegate the material revision to the installed writer agent. Give the writer the audience, intended behavior, concrete failure, constraints, and designated source; do not designate any other project file. Require the writer to open the plugin writing skill, references/style.md, references/agent-rules.md, and references/editing.md before drafting.",
+    "expectSkill": true,
+    "expectDelegation": true,
+    "expectedReads": [
+      "evals/fixtures/AGENTS.md",
+      "references/style.md",
+      "references/agent-rules.md"
+    ],
+    "codexExpectedReads": [
+      "skills/writing/SKILL.md",
+      "references/editing.md"
+    ],
+    "readCanaries": {
+      "evals/fixtures/AGENTS.md": "# Agent instructions",
+      "skills/writing/SKILL.md": "# Write for readers",
+      "references/style.md": "# Universal style pass",
+      "references/agent-rules.md": "# Agent rules",
+      "references/editing.md": "# Editing existing documents"
+    },
+    "forbiddenReads": [
+      "evals/fixtures/unrelated.md"
+    ],
+    "forbiddenCanaries": {
+      "evals/fixtures/unrelated.md": "UNRELATED-CONTEXT-7F3A"
+    }
+  },
+  {
+    "id": "trivial-prose-inline",
+    "prompt": "Replace the button label `Retry` with `Try again`. Return only the replacement label.",
+    "expectSkill": false,
+    "expectDelegation": false,
+    "mustInclude": "Try again"
+  }
+]

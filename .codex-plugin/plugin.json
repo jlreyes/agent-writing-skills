@@ -1,0 +1,32 @@
+{
+  "name": "agent-writing",
+  "version": "0.2.0+codex.20260817214102",
+  "description": "Reader-first writing guidance for meaningful prose addressed to humans or agents.",
+  "author": {
+    "name": "James Reyes"
+  },
+  "homepage": "https://github.com/jlreyes/agent-writing-skills",
+  "repository": "https://github.com/jlreyes/agent-writing-skills",
+  "license": "MIT",
+  "keywords": [
+    "writing",
+    "agents",
+    "reader-first"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Agent Writing",
+    "shortDescription": "Reader-first writing for humans and agents.",
+    "longDescription": "Portable reader-first guidance for meaningful prose, plus a companion fresh-writer agent installed through each runtime's native path.",
+    "developerName": "James Reyes",
+    "category": "Productivity",
+    "capabilities": [
+      "Writing"
+    ],
+    "defaultPrompt": [
+      "Write this for a cold reader.",
+      "Draft a durable agent instruction.",
+      "Cold-review this plan or report."
+    ]
+  }
+}

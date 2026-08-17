@@ -1,4 +1,4 @@
-name: Validate skills
+name: Validate plugin
 
 on:
   pull_request:
@@ -15,5 +15,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - run: node scripts/validate-skills.mjs
+      - run: node scripts/validate-plugin.mjs
       - run: npx --yes skills@1.5.22 add . --list
