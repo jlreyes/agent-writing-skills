@@ -11,7 +11,7 @@ The repository keeps one architecture across runtimes:
 | --- | --- |
 | `skills/writing/` | The portable skill and its progressively loaded references |
 | `agents/writer.md` | Claude Code adapter that preloads the skill |
-| `.codex/config.toml` and `.codex/agents/writer.toml` | Codex project agent registration and model adapter |
+| `.codex/agents/writer.toml` | Native Codex project/user agent adapter |
 | `.claude-plugin/` and `.codex-plugin/` | Native manifests for the same plugin bundle |
 
 The canonical ownership and delegation doctrine lives in
@@ -45,11 +45,18 @@ codex plugin marketplace add jlreyes/agent-writing-skills
 codex plugin add agent-writing@agent-writing
 ```
 
-Codex 0.146.0 plugin bundles install skills but do not install custom-agent
-roles. To use the writer outside this repository, copy its `[agents.writer]`
-entry and `agents/writer.toml` into the target project's `.codex/` config, or
-register the role in the user config. These are native Codex TOML settings, not
-shared Claude frontmatter.
+Codex plugins do not package custom-agent roles. From a checkout of this
+repository, install the same writer as a native user agent:
+
+```bash
+node scripts/install-codex-agent.mjs
+```
+
+The installer writes `writer.toml` to `${CODEX_HOME:-~/.codex}/agents/` and
+refuses to replace a different existing writer unless you pass `--force`.
+Inside this repository, Codex also discovers `.codex/agents/writer.toml`
+directly as a project agent. Start a new session after installing or updating
+the agent.
 
 The skill can also be installed independently:
 
@@ -64,14 +71,21 @@ Use the delegation criteria and handoff contract in the canonical
 the same writer for authorship, material revision, cold review, or a final
 handoff; the reference defines when inline prose is appropriate.
 
-Claude exposes the writer as `agent-writing:writer`. The Codex project adapter
-registers the corresponding role as `writer`; see the current CLI limitation
-below.
+Claude exposes the writer as `agent-writing:writer`. Codex exposes the
+separately installed native agent as `writer`.
+
+Skill and agent descriptions guide model selection; they are not enforcement
+hooks. When skill use must be deterministic in either runtime, request
+`agent-writing:writing` explicitly. For Codex writer delegation, say: “Use
+`agent-writing:writing` and delegate the material writing to the installed
+`writer` agent; require it to load every routed reference before drafting.” A
+repository instruction can make that request durable for one project; the
+plugin does not silently change global Codex instructions.
 
 ## Guidance included
 
-The skill handles ordinary reader-first prose directly and loads a specialized
-reference only when the artifact requires one:
+The skill always loads the universal style reference, then every reference
+whose artifact or operation matches the writing job:
 
 | Reference | Use |
 | --- | --- |
@@ -80,22 +94,18 @@ reference only when the artifact requires one:
 | `technical-plans.md` | RFCs, architecture plans, and implementation plans |
 | `agent-rules.md` | Behavior-bearing AGENTS.md, CLAUDE.md, skills, prompts, and policy |
 | `editing.md` | Revisions that must preserve unrelated material |
-| `style.md` | Optional repair of generic or inflated model prose |
+| `style.md` | Universal prose judgment and final style pass |
 
 ## Native model defaults
 
 The adapters keep runtime-specific model configuration thin:
 
-- Claude Code uses `sonnet` at low effort. `CLAUDE_CODE_SUBAGENT_MODEL` or an
+- Claude Code uses `sonnet` at medium effort. `CLAUDE_CODE_SUBAGENT_MODEL` or an
   explicit invocation model can override the model default.
-- The Codex adapter requests `gpt-5.6-terra` at low effort. Codex gives a
-  role-local model setting precedence, so override it by changing the project
-  or user copy of `writer.toml`.
+- The Codex adapter uses `gpt-5.6-terra` at medium effort. Override either
+  setting by changing the project or user copy of `writer.toml`.
 
-Claude's default was exercised through the installed writer. Codex 0.146.0
-accepted the requested default under strict configuration, but did not apply the
-registered writer role; see the runtime boundary below. Rerun the behavioral
-evals when changing either adapter or runtime version.
+Rerun the behavioral evals when changing either adapter or runtime version.
 
 ## Runtime boundaries
 
@@ -108,13 +118,13 @@ the handoff. Claude does not currently enforce an agent-local path allowlist, so
 that scope is a behavioral rule rather than a security boundary. See
 [what Claude loads into a subagent](https://code.claude.com/docs/en/sub-agents#what-loads-at-startup).
 
-Codex custom agents are project- or user-scoped rather than plugin-shipped.
-Codex 0.146.0 accepted this project adapter under `--strict-config`, but the v2
-CLI did not automatically delegate from its description and an explicit launch
-recorded a generic child rather than the registered role. The eval reports that
-as a runtime limitation. The role's `read-only` sandbox prevents writes but does
-not itself prevent reads of unrelated accessible files; controlled context is
-likewise a behavioral rule.
+In Codex 0.146.0, custom agents are project- or user-scoped rather than
+plugin-shipped, so the Codex install has two explicit parts: plugin installation
+for the portable skill and native agent installation for the writer. The
+writer's description is a selection signal, not an enforcement hook; use the
+explicit invocation above when delegation must occur. Its `read-only` sandbox
+prevents writes but does not itself prevent reads of unrelated accessible
+files; controlled context remains a behavioral rule.
 
 ## Validate and evaluate
 
@@ -133,10 +143,13 @@ node scripts/run-boundary-eval.mjs claude
 node scripts/run-boundary-eval.mjs codex
 ```
 
-The Claude suite proves implicit skill activation, fresh-writer delegation plus
-controlled designated context for a durable agent instruction, and inline
-handling of trivial prose. The Codex suite proves skill activation and trivial
-inline handling while reporting the current custom-role limitation.
+Both suites prove explicit fresh-session skill discovery and activation,
+universal style loading, and inline handling of trivial prose. The Claude suite
+also proves implicit fresh-writer delegation for a durable agent instruction.
+The Codex suite uses the documented explicit request and proves that it launches
+the installed `writer` role on Terra at medium effort, loads the plugin skill
+and routed references inside that child, and stays within the designated source
+context.
 `evals/cases.json` remains the optional deeper Claude content corpus. Live evals
 are intentionally excluded from unauthenticated CI.
 

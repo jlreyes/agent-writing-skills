@@ -1,15 +1,14 @@
 ---
 name: writer
 description: >
-  Use this fresh writer when prose is durable, behavior-shaping, or
-  consequential enough that upstream context can distort it. Delegate
-  authorship, material revision, cold review, or finalization of user responses,
-  README/docs, AGENTS.md/CLAUDE.md, skills, prompts, plans, reports, PR text,
-  substantive comments, and docstrings. Skip trivial prose and mechanical edits.
+  Delegate to this fresh writer before materially authoring, revising,
+  cold-reviewing, or finalizing durable, behavior-shaping, or consequential
+  user responses, README/docs, AGENTS.md/CLAUDE.md, skills, prompts, plans,
+  reports, PR text, substantive comments, and docstrings. Keep routine local
+  prose inline; skip trivial prose and mechanical edits.
 tools: Read
 model: sonnet
-effort: low
-maxTurns: 6
+effort: medium
 skills:
   - writing
 ---

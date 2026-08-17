@@ -29,6 +29,7 @@ const run = spawnSync(
     "--add-dir", pluginDir,
     "-p", prompt,
     "--model", process.env.EVAL_MODEL ?? "sonnet",
+    "--effort", process.env.EVAL_EFFORT ?? "medium",
     "--tools", "Agent,Read",
     "--setting-sources", "",
     "--strict-mcp-config",
@@ -71,10 +72,11 @@ const writerReads = events.flatMap((event) =>
   event.type === "assistant" && (event.parent_tool_use_id || event.message?.parent_tool_use_id)
     ? (event.message?.content ?? []).filter((block) => block.type === "tool_use" && block.name === "Read")
     : []);
-const routed = testCase.reference === "core"
-  ? writerReads.length === 0
-  : writerReads.some((block) =>
-      block.input?.file_path?.endsWith(`/references/${testCase.reference}.md`));
+const styleRouted = writerReads.some((block) =>
+  block.input?.file_path?.endsWith("/references/style.md"));
+const artifactRouted = testCase.reference === "core" || writerReads.some((block) =>
+  block.input?.file_path?.endsWith(`/references/${testCase.reference}.md`));
+const routed = styleRouted && artifactRouted;
 const failedTool = run.stdout.includes('"is_error":true') ||
   run.stdout.includes("Agent terminated early") ||
   run.stdout.includes("would be spawned with zero tools");
@@ -85,7 +87,7 @@ if (run.status !== 0 || !loaded || !delegated || !routed || failedTool || !resul
   process.stderr.write(run.stdout);
   process.stderr.write(
     "\nEval infrastructure failed: expected a loaded plugin, writer, skill, " +
-    "successful delegation, and the declared reference-routing behavior.\n",
+    "successful delegation, universal style loading, and the declared artifact-routing behavior.\n",
   );
   process.exit(1);
 }

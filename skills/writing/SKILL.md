@@ -1,6 +1,6 @@
 ---
 name: writing
-description: Use when writing or materially revising meaningful prose for a human or agent reader, including user responses; README or docs; AGENTS.md or CLAUDE.md; skills or prompts; plans or reports; PR descriptions, reviews, or comments; and code comments or docstrings. Establish audience, purpose, reader context, information order, proportion, and evidence boundaries. Skip trivial labels and mechanical wording changes.
+description: Use for every meaningful prose task for a human or agent, including user responses, README/docs, AGENTS.md/CLAUDE.md, skills, prompts, plans, reports, PR text, substantive comments, and docstrings. Covers authorship, material revision, cold review, and finalization; skip only trivial labels and mechanical wording changes. Establishes audience, purpose, reader context, information order, proportion, style, and evidence boundaries.
 ---
 
 # Write for readers
@@ -47,41 +47,17 @@ Give a simple question a simple answer. Do not turn ordinary conversation into
 a report because more context is available. Conversely, do not compress
 consequential analysis until its logic becomes opaque.
 
-Use the smallest structure that makes the logic easy to recover. Use prose for
-reasoning and causality, lists for genuinely parallel items, tables for repeated
-comparisons, and diagrams for relationships or sequence.
+Use the smallest structure that makes the logic easy to recover. Reserve tables
+for repeated comparisons and diagrams for relationships or sequence that prose
+cannot make equally clear.
 
 For an ordinary answer, question, recommendation, completion note, or status
 update:
 
-- lead with the answer or outcome;
 - state limitations or blockers that change what the reader can do;
 - include evidence in proportion to the claim;
 - ask only for a decision or action that is actually needed;
 - stop when the reader can understand and act.
-
-## Make the prose carry the reasoning
-
-Prefer:
-
-- concrete subjects and active verbs;
-- familiar words when they preserve precision;
-- stable terminology;
-- explicit causal and logical relationships;
-- claims calibrated to their evidence;
-- one controlling idea per paragraph.
-
-Avoid:
-
-- unexplained internal jargon;
-- throat-clearing;
-- generic summaries of what the reader just read;
-- inflated statements of importance;
-- rhetorical flourishes standing in for analysis;
-- synonym cycling where one precise term is clearer;
-- headings that merely label generic categories.
-
-Delete material that does not improve understanding, confidence, or action.
 
 ## Preserve epistemic boundaries
 
@@ -92,10 +68,12 @@ from the source: plausible specifics become false information. Preserve
 underspecified dates, locations, mechanisms, causes, and product surfaces as
 given.
 
-## Load specialized guidance only when needed
+## Load the writing references
 
-The rules above are sufficient for ordinary conversational responses. For a
-specialized communicative job, load the applicable reference:
+For every activation, load [style](references/style.md). Apply it with
+judgment: preserve useful voice and do not turn its examples into word bans.
+
+Then load every artifact reference that matches the writing job:
 
 - Substantive analyses, investigations, reviews, audits, research syntheses, or
   decision briefs: [reports](references/reports.md)
@@ -105,18 +83,15 @@ specialized communicative job, load the applicable reference:
 - RFCs, architecture plans, design documents, or implementation plans:
   [technical plans](references/technical-plans.md)
 - AGENTS.md, CLAUDE.md, skills, prompts, policies, or other behavior-bearing
-  instructions: [agent rules](references/agent-rules.md)
-
-Layer these operational references only when needed:
+  instructions: [agent rules](references/agent-rules.md). This reference is the
+  canonical owner for deciding whether the primary agent writes inline or
+  delegates to a fresh writer; follow its decision before drafting.
 
 - Revision of an existing artifact where unrelated content must be preserved:
   also load [editing](references/editing.md)
-- Substantial prose showing generic LLM habits or when the user requests a
-  style polish: optionally load [style](references/style.md)
 
-Do not load a reference merely because its topic appears in the source
-material. Combine a format reference with `editing.md` only when both the
-artifact type and preservation scope matter.
+Use multiple references for a mixed artifact. Match references to the writing
+job, not merely to topics mentioned in the source material.
 
 ## Run the cold-reader test
 

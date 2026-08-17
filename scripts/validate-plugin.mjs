@@ -11,7 +11,6 @@ const agentRules = await readFile(
   "utf8",
 );
 const claudeAgent = await readFile(new URL("agents/writer.md", root), "utf8");
-const codexConfig = await readFile(new URL(".codex/config.toml", root), "utf8");
 const codexAgent = await readFile(
   new URL(".codex/agents/writer.toml", root),
   "utf8",
@@ -50,7 +49,7 @@ const skillKeys = [...skillFrontmatter.matchAll(/^([a-zA-Z0-9_-]+):/gm)].map(
 if (skillKeys.some((key) => !["name", "description"].includes(key))) {
   errors.push("portable skill frontmatter may contain only name and description");
 }
-if (!skillFrontmatter.includes("description: Use when")) {
+if (!skillFrontmatter.includes("description: Use for every meaningful prose task")) {
   errors.push("writing skill description must lead with its activation condition");
 }
 
@@ -72,21 +71,42 @@ for (const artifact of [
   }
 }
 
-if (!claudeAgent.includes("description: >\n  Use this fresh writer")) {
+if (!claudeAgent.includes("description: >\n  Delegate to this fresh writer")) {
   errors.push("Claude writer description must lead with its delegation condition");
 }
-if (!claudeAgent.includes("model: sonnet") || !claudeAgent.includes("effort: low")) {
-  errors.push("Claude writer must declare its native latency-conscious defaults");
+if (!claudeAgent.includes("model: sonnet") || !claudeAgent.includes("effort: medium")) {
+  errors.push("Claude writer must declare Sonnet at medium effort");
 }
-if (!codexConfig.includes("[agents.writer]") || !codexConfig.includes('config_file = "agents/writer.toml"')) {
-  errors.push("Codex project adapter must register the writer role natively");
+if (claudeAgent.includes("maxTurns:")) {
+  errors.push("Claude writer must not impose an arbitrary turn ceiling");
 }
-if (!codexAgent.includes('model = "gpt-5.6-terra"') || !codexAgent.includes('model_reasoning_effort = "low"')) {
-  errors.push("Codex writer must declare its native latency-conscious defaults");
+if (!codexAgent.includes('name = "writer"') || !codexAgent.includes('description = "Delegate to this fresh writer')) {
+  errors.push("Codex writer must use the native standalone custom-agent schema");
+}
+if (!codexAgent.includes('model = "gpt-5.6-terra"') || !codexAgent.includes('model_reasoning_effort = "medium"')) {
+  errors.push("Codex writer must declare Terra at medium effort");
 }
 if (!codexAgent.includes("developer_instructions")) {
   errors.push("Codex writer role must define developer instructions");
 }
+if (!skill.includes("For every activation, load [style]")) {
+  errors.push("writing skill must always load the universal style reference");
+}
+for (const source of [
+  "the-new-rules-of-context-engineering-for-claude-5-generation-models",
+  "claude-prompting-best-practices",
+]) {
+  if (!agentRules.includes(source)) {
+    errors.push(`canonical agent-rules reference omits source grounding: ${source}`);
+  }
+}
+try {
+  await access(new URL(".codex/config.toml", root));
+  errors.push("Codex adapter must not use the obsolete [agents.writer] indirection");
+} catch (error) {
+  if (error.code !== "ENOENT") throw error;
+}
+await access(new URL("scripts/install-codex-agent.mjs", root));
 if (codexManifest.skills !== "./skills/") {
   errors.push("Codex plugin manifest must expose the portable skill directory");
 }

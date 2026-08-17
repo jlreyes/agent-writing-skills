@@ -2,7 +2,6 @@
 
 import { spawnSync } from "node:child_process";
 import {
-  copyFile,
   cp,
   mkdir,
   mkdtemp,
@@ -34,7 +33,6 @@ if (!["claude", "codex"].includes(platform) || cases.length === 0) {
 
 const timeout = Number(process.env.EVAL_TIMEOUT_MS ?? 180_000);
 let failures = 0;
-let limitations = 0;
 
 function run(command, args, options = {}) {
   return spawnSync(command, args, {
@@ -52,17 +50,10 @@ function parseJsonLines(output) {
     .map((line) => JSON.parse(line));
 }
 
-function finish(caseId, issues, runtimeLimitations = []) {
+function finish(caseId, issues) {
   if (issues.length > 0) {
     failures += 1;
     process.stderr.write(`FAIL ${platform} ${caseId}: ${issues.join("; ")}\n`);
-    return;
-  }
-  if (runtimeLimitations.length > 0) {
-    limitations += 1;
-    process.stdout.write(
-      `LIMITATION ${platform} ${caseId}: ${runtimeLimitations.join("; ")}\n`,
-    );
     return;
   }
   process.stdout.write(`PASS ${platform} ${caseId}\n`);
@@ -102,7 +93,7 @@ async function runClaude() {
           "--add-dir", installed.pluginDir,
           "-p", prompt,
           "--model", process.env.EVAL_CLAUDE_MODEL ?? "sonnet",
-          "--effort", process.env.EVAL_CLAUDE_EFFORT ?? "low",
+          "--effort", process.env.EVAL_CLAUDE_EFFORT ?? "medium",
           "--tools", "Agent,Read,Skill",
           "--setting-sources", "",
           "--strict-mcp-config",
@@ -188,7 +179,10 @@ async function runClaude() {
         );
       }
       for (const expected of testCase.expectedReads ?? []) {
-        const paths = expected.startsWith("references/") ? readPaths : allReadPaths;
+        const paths =
+          expected.startsWith("references/") && testCase.expectDelegation
+            ? readPaths
+            : allReadPaths;
         if (!paths.some((path) => path.endsWith(expected))) {
           issues.push(`controlled session did not read designated ${expected}`);
         }
@@ -242,6 +236,44 @@ async function readRollout(directory, threadId) {
   return parseJsonLines(await readFile(path, "utf8"));
 }
 
+function completedToolCalls(events) {
+  const outputs = new Map(
+    events
+      .filter(
+        (event) =>
+          event.type === "response_item" &&
+          ["function_call_output", "custom_tool_call_output"].includes(
+            event.payload?.type,
+          ),
+      )
+      .map((event) => [
+        event.payload.call_id,
+        typeof event.payload.output === "string"
+          ? event.payload.output
+          : JSON.stringify(event.payload.output ?? ""),
+      ]),
+  );
+  return events
+    .filter(
+      (event) =>
+        event.type === "response_item" &&
+        ["function_call", "custom_tool_call"].includes(event.payload?.type),
+    )
+    .map((event) => ({
+      name: event.payload.name,
+      arguments: event.payload.arguments ?? event.payload.input ?? "",
+      output: outputs.get(event.payload.call_id) ?? "",
+    }));
+}
+
+function hasReadEvidence(toolCalls, path, canary) {
+  return toolCalls.some(
+    (call) =>
+      call.arguments.includes(path) &&
+      (!canary || call.output.includes(canary)),
+  );
+}
+
 async function installCodexPlugin() {
   const configDir = await mkdtemp(join(tmpdir(), "agent-writing-codex-"));
   const projectDir = await mkdtemp(join(tmpdir(), "agent-writing-project-"));
@@ -261,16 +293,15 @@ async function installCodexPlugin() {
   );
   if (install.status !== 0) throw new Error(install.stderr || install.stdout);
 
-  await mkdir(join(projectDir, ".codex/agents"), { recursive: true });
   await mkdir(join(projectDir, "evals/fixtures"), { recursive: true });
-  await copyFile(
-    resolve(root, ".codex/config.toml"),
-    join(projectDir, ".codex/config.toml"),
+  const installAgent = run(
+    process.execPath,
+    [resolve(root, "scripts/install-codex-agent.mjs")],
+    { env },
   );
-  await copyFile(
-    resolve(root, ".codex/agents/writer.toml"),
-    join(projectDir, ".codex/agents/writer.toml"),
-  );
+  if (installAgent.status !== 0) {
+    throw new Error(installAgent.stderr || installAgent.stdout);
+  }
   await cp(resolve(root, "evals/fixtures"), join(projectDir, "evals/fixtures"), {
     recursive: true,
   });
@@ -284,13 +315,17 @@ async function runCodex() {
   try {
     for (const testCase of cases) {
       const fixture = resolve(installed.projectDir, "evals/fixtures/AGENTS.md");
-      const prompt = testCase.prompt.replace("{fixture}", fixture);
+      const casePrompt = testCase.prompt.replace("{fixture}", fixture);
+      const prompt = testCase.codexPromptPrefix
+        ? `${testCase.codexPromptPrefix}\n\n${casePrompt}`
+        : casePrompt;
       const trust = `projects.${JSON.stringify(installed.projectDir)}.trust_level=\"trusted\"`;
       const args = [
         "--strict-config",
         "--enable", "multi_agent_v2",
         "exec",
         "--json",
+        "--ignore-user-config",
         "--ignore-rules",
         "--skip-git-repo-check",
         "-s", "read-only",
@@ -298,6 +333,7 @@ async function runCodex() {
         "-c", `model_reasoning_effort=\"${process.env.EVAL_CODEX_PARENT_EFFORT ?? "medium"}\"`,
         "-c", "agents.max_depth=1",
         "-c", "agents.max_concurrent_threads_per_session=4",
+        "-c", 'skills.config=[{name="writing-agent-rules",enabled=false}]',
         "-c", trust,
         "-C", installed.projectDir,
       ];
@@ -305,7 +341,6 @@ async function runCodex() {
       args.push(prompt);
       const cli = run("codex", args, { cwd: installed.projectDir, env: installed.env });
       const issues = [];
-      const runtimeLimitations = [];
       if (cli.error || cli.status !== 0) {
         issues.push(cli.error?.message ?? `Codex exited ${cli.status}`);
         process.stderr.write(cli.stderr);
@@ -326,6 +361,17 @@ async function runCodex() {
         .filter((event) => event.item?.type === "command_execution")
         .map((event) => `${event.item?.command ?? ""}\n${event.item?.aggregated_output ?? ""}`)
         .join("\n");
+      const streamToolCalls = stream
+        .filter(
+          (event) =>
+            event.type === "item.completed" &&
+            event.item?.type === "command_execution",
+        )
+        .map((event) => ({
+          name: "command_execution",
+          arguments: event.item.command ?? "",
+          output: event.item.aggregated_output ?? "",
+        }));
       const skillActivated =
         commandText.includes("/skills/writing/SKILL.md") &&
         commandText.includes("# Write for readers");
@@ -345,8 +391,24 @@ async function runCodex() {
         ? await readRollout(resolve(installed.configDir, "sessions"), childId)
         : [];
       const childMeta = child.find((event) => event.type === "session_meta")?.payload;
+      const childTurn = child.find((event) => event.type === "turn_context")?.payload;
       const agentRole = childMeta?.source?.subagent?.thread_spawn?.agent_role;
-      const childText = JSON.stringify(child);
+      const childToolCalls = completedToolCalls(child);
+      const parentToolCalls = completedToolCalls(parent);
+      const observedToolCalls = [
+        ...streamToolCalls,
+        ...parentToolCalls,
+        ...childToolCalls,
+      ];
+      if (
+        observedToolCalls.some(
+          (call) =>
+            call.arguments.includes("/writing-agent-rules/SKILL.md") ||
+            call.output.includes("name: writing-agent-rules"),
+        )
+      ) {
+        issues.push("external writing-agent-rules skill contaminated the isolated run");
+      }
 
       if (testCase.expectSkill && !skillActivated) {
         issues.push("installed writing skill did not activate successfully");
@@ -359,22 +421,60 @@ async function runCodex() {
       }
       if (testCase.expectDelegation) {
         if (!spawn) {
-          runtimeLimitations.push(
-            "Codex 0.146.0 did not automatically delegate from the registered writer description",
-          );
+          issues.push("Codex did not delegate to the installed writer");
         } else if (agentRole !== "writer") {
-          runtimeLimitations.push(
-            "Codex 0.146.0 launched a generic child instead of applying the registered writer role",
-          );
+          issues.push(`Codex launched agent role ${agentRole ?? "unknown"}, not writer`);
         }
-        for (const expected of testCase.expectedReads ?? []) {
-          if (spawn && !childText.includes(expected)) {
-            runtimeLimitations.push(`child did not read designated ${expected}`);
+        if (spawn && childTurn?.model !== "gpt-5.6-terra") {
+          issues.push(`writer used model ${childTurn?.model ?? "unknown"}, not gpt-5.6-terra`);
+        }
+        if (spawn && childTurn?.effort !== "medium") {
+          issues.push(`writer used effort ${childTurn?.effort ?? "unknown"}, not medium`);
+        }
+        const expectedReads = [
+          ...(testCase.expectedReads ?? []),
+          ...(testCase.codexExpectedReads ?? []),
+        ];
+        for (const expected of expectedReads) {
+          const calls =
+            expected.startsWith("references/") ||
+            expected.startsWith("skills/writing/")
+            ? childToolCalls
+            : [...parentToolCalls, ...childToolCalls];
+          if (
+            spawn &&
+            !hasReadEvidence(
+              calls,
+              expected,
+              testCase.readCanaries?.[expected],
+            )
+          ) {
+            issues.push(`writer did not read designated ${expected}`);
           }
         }
         for (const forbidden of testCase.forbiddenReads ?? []) {
-          if (childText.includes(forbidden)) {
-            issues.push(`child explored forbidden ${forbidden}`);
+          const calls = [...parentToolCalls, ...childToolCalls];
+          const canary = testCase.forbiddenCanaries?.[forbidden];
+          if (
+            calls.some(
+              (call) =>
+                call.arguments.includes(forbidden) ||
+                (canary && call.output.includes(canary)),
+            )
+          ) {
+            issues.push(`session explored forbidden ${forbidden}`);
+          }
+        }
+      } else {
+        for (const expected of testCase.expectedReads ?? []) {
+          if (
+            !hasReadEvidence(
+              [...parentToolCalls, ...streamToolCalls],
+              expected,
+              testCase.readCanaries?.[expected],
+            )
+          ) {
+            issues.push(`session did not read designated ${expected}`);
           }
         }
       }
@@ -387,13 +487,20 @@ async function runCodex() {
       }
       if (issues.length > 0 && process.env.EVAL_DEBUG) {
         process.stderr.write(cli.stdout);
+        process.stderr.write(
+          `${JSON.stringify({ parentToolCalls, childToolCalls }, null, 2)}\n`,
+        );
       }
-      finish(testCase.id, issues, runtimeLimitations);
+      finish(testCase.id, issues);
     }
   } finally {
     if (!process.env.EVAL_KEEP_TEMP) {
       await rm(installed.configDir, { recursive: true, force: true });
       await rm(installed.projectDir, { recursive: true, force: true });
+    } else {
+      process.stderr.write(
+        `Kept Codex eval directories: ${installed.configDir} ${installed.projectDir}\n`,
+      );
     }
   }
 }
@@ -406,7 +513,4 @@ try {
   process.exit(1);
 }
 
-if (limitations > 0) {
-  process.stdout.write(`${limitations} runtime limitation(s) observed.\n`);
-}
 process.exit(failures > 0 ? 1 : 0);

@@ -4,6 +4,10 @@ Write the smallest instruction system that reliably shapes behavior. Modern
 agents can infer ordinary practice; every additional rule consumes context,
 creates another possible conflict, and may outlive its premise.
 
+This reference combines source-aligned Claude 5 context engineering with
+package policy learned from recurring agent failures. The final source section
+names the boundary; do not present package policy as Anthropic guidance.
+
 Apply this guidance because the text instructs an agent, not merely because an
 agent writes it. Also use `technical-documentation.md` when deciding the
 architecture or placement of durable documentation.
@@ -19,6 +23,7 @@ architecture or placement of durable documentation.
 - [Bound autonomous behavior](#bound-autonomous-behavior)
 - [Include an escalation valve](#include-an-escalation-valve)
 - [Name only executable mechanisms](#name-only-executable-mechanisms)
+- [Keep source guidance and package policy distinct](#keep-source-guidance-and-package-policy-distinct)
 - [Review the instruction set](#review-the-instruction-set)
 
 ## Establish the control surface
@@ -38,18 +43,20 @@ make the desired behavior automatic and observable.
 ## Give durable prose fresh-writer ownership
 
 The more durable and behavior-shaping the prose, the more valuable authorship
-from a fresh writer becomes. A material mistake in a user response costs one
-exchange; a material mistake in a README, `AGENTS.md`, `CLAUDE.md`, skill,
-prompt, or other instruction can mislead many readers or propagate through
-later agent sessions.
+from a fresh writer becomes. A material mistake in an ordinary user response is
+often contained to one exchange; a material mistake in a README, `AGENTS.md`,
+`CLAUDE.md`, skill, prompt, or other instruction can mislead many readers or
+propagate through later agent sessions. Consequential user responses still earn
+fresh-writer ownership even when they are not durable.
 
-Materially author or revise those durable surfaces through the same fresh
-writer used for cold review and final handoffs. This is especially important
-for behavior-bearing instructions, but it also applies to substantial
-content-only documentation. Keep the distinction explicit: documentation
-explains a system to a reader; an instruction changes what an agent will do.
-When a document does both, apply this reference to the behavior-bearing parts
-and `technical-documentation.md` to the explanatory parts.
+As package policy, default material authorship or revision of those durable
+surfaces to the same fresh writer used for cold review and final handoffs. This
+is especially important for behavior-bearing instructions, but it also applies
+to substantial content-only documentation. Keep the distinction explicit:
+documentation explains a system to a reader; an instruction changes what an
+agent will do. When a document does both, apply this reference to the
+behavior-bearing parts and `technical-documentation.md` to the explanatory
+parts.
 
 The primary agent still owns the facts and decisions. Its handoff should give
 the writer:
@@ -60,10 +67,11 @@ the writer:
 - the exact source material needed, either inline or as designated files and
   passages.
 
-Fresh context means controlled context, not no context. The writer may read the
-files or passages explicitly designated in the handoff, but should not explore
-the repository independently to invent or recover missing premises. A missing
-material premise goes back to the primary agent.
+Fresh context means controlled context, not no context. As an authorship and
+authority boundary for this package, the writer may read the files or passages
+explicitly designated in the handoff, but should not explore the repository
+independently to invent or recover missing premises. A missing material premise
+goes back to the primary agent.
 
 Routine local prose can stay with the primary agent when implementation context
 and latency matter: a trivial label, a mechanical wording change, or a short
@@ -90,21 +98,31 @@ or agent to load is a broken dispatch rule.
 
 ## Spend always-loaded context carefully
 
-Keep a root instruction file compact enough to be understood on every turn. It
-should contain only repository purpose, authority and priority, a few universal
-invariants with short reasons, an escalation valve, and triggers for more
-specific skills.
+Keep a root instruction file compact enough to be understood on every turn.
+Spend its limited context on repository purpose, non-obvious codebase gotchas,
+authority and priority, a few universal invariants with short reasons, an
+escalation valve, and triggers for more specific skills. Omit facts the agent
+can recover reliably from the repository itself.
 
 Move commands, procedures, lookup tables, examples, and domain-specific
 exceptions behind task-specific triggers. Let the skill be canonical for its
 procedure; keep only the invariant and pointer in the root.
+
+Keep skills lightweight and judgment-oriented. Split long skills into directly
+linked references that load for the matching task, and allow rich references
+to be code, tests, specs, or artifacts rather than only prose summaries.
 
 Keep trigger descriptions concrete rather than reducing them to broad topic
 labels.
 
 ## Choose the right kind of rule
 
-Classify each proposed instruction:
+Start with the intended outcome and enough context for the agent to use
+judgment. Add prescriptive mechanics only when the task is fragile or the
+failure has material consequences. Reconsider constraints inherited from older
+models instead of carrying them forward automatically.
+
+When a durable rule is still justified, classify it:
 
 1. **Hard invariant:** an absolute justified by material blast radius, such as
    secret exposure, destructive data loss, production authority, or history
@@ -128,7 +146,7 @@ State the actual boundary directly.
 
 ## Bound autonomous behavior
 
-Every loop or gate must define:
+Every long-running, retrying, or convergence loop or gate must define:
 
 - what causes it to start;
 - which material changes cause it to run again;
@@ -142,11 +160,11 @@ status updates that cannot affect its result.
 
 ## Include an escalation valve
 
-Tell the agent to stop and ask the owner, with a recommendation, when a required
-mechanism is unavailable, rules conflict, a loop is not converging, or scope is
-ballooning merely to satisfy the written process. A headless agent should report
-the same decision as `BLOCKED` instead of silently choosing or engineering
-around the rule.
+Rules record decisions, not laws of physics. Tell the agent to stop and ask the
+owner, with a recommendation, when a required mechanism is unavailable, rules
+conflict, a loop is not converging, or scope is ballooning merely to satisfy
+the written process. A headless agent should report the same decision as
+`BLOCKED` instead of silently choosing or engineering around the rule.
 
 ## Name only executable mechanisms
 
@@ -157,12 +175,42 @@ name who performs it and what the agent does while waiting.
 Date empirical premises that can become stale and state the condition under
 which the rule should be removed or revisited.
 
+## Keep source guidance and package policy distinct
+
+Anthropic's Claude 5 context-engineering guidance supports a small core:
+
+- let capable models use judgment instead of accumulating blanket rules;
+- keep root instructions lightweight and avoid restating what the repository
+  or tools already make clear;
+- use progressive disclosure so specialized context loads for the matching
+  task;
+- put tool behavior in clear interfaces and descriptions instead of repeating
+  the same instruction across the prompt.
+
+Its broader prompting guidance also supports explicit outcomes, relevant
+context, and a few diverse examples when examples materially improve format,
+tone, or edge-case handling. Examples are a tool, not a default substitute for
+a clear interface.
+
+The every-meaningful-prose activation rule, universal style-reference loading,
+fresh-writer ownership, controlled context, dispatch heuristics,
+hard-invariant/principle/mechanic categories, bounded-loop contract,
+escalation valve, and executable-mechanism check are package policy derived
+from observed agent failures. Keep them only while they continue to prevent
+those failures; do not attribute them to Anthropic.
+
+Primary sources:
+
+- [The new rules of context engineering for Claude 5 generation models](https://claude.com/blog/the-new-rules-of-context-engineering-for-claude-5-generation-models)
+- [Claude prompting best practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices)
+
 ## Review the instruction set
 
 Confirm that:
 
 - every absolute names a concrete consequence;
-- every loop has a bounded exit and a material-change retrigger;
+- every long-running, retrying, or convergence loop has a bounded exit and a
+  material-change retrigger;
 - every mechanism is available to the agent it binds;
 - every topic has one canonical owner;
 - task-specific mechanics stay behind a trigger;
