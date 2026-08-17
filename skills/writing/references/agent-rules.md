@@ -1,22 +1,23 @@
----
-name: writing-agent-rules
-description: Writes, reviews, and restructures text that controls agent behavior, including AGENTS.md, CLAUDE.md, skills, system prompts, working agreements, and review instructions. Must be used whenever creating or changing agent-facing rules, or when agents repeatedly grind, overengineer, follow stale procedures, or rediscover the same blocker.
-license: MIT
-metadata:
-  author: jlreyes
-  version: 1.0.0
----
-
-# Writing agent rules
+# Agent rules
 
 Write the smallest instruction system that reliably shapes behavior. Modern
 agents can infer ordinary practice; every additional rule consumes context,
-creates another possible conflict, and may be followed long after its premise
-expires.
+creates another possible conflict, and may outlive its premise.
 
-This skill applies because the text **instructs an agent**, not merely because
-an agent writes it. When deciding the architecture or placement of durable
-documentation, also load `writing-technical-documentation` if it is available.
+Apply this guidance because the text instructs an agent, not merely because an
+agent writes it. Also use `technical-documentation.md` when deciding the
+architecture or placement of durable documentation.
+
+## Contents
+
+- [Establish the control surface](#establish-the-control-surface)
+- [Spend always-loaded context carefully](#spend-always-loaded-context-carefully)
+- [Choose the right kind of rule](#choose-the-right-kind-of-rule)
+- [Give every rule one owner](#give-every-rule-one-owner)
+- [Bound autonomous behavior](#bound-autonomous-behavior)
+- [Include an escalation valve](#include-an-escalation-valve)
+- [Name only executable mechanisms](#name-only-executable-mechanisms)
+- [Review the instruction set](#review-the-instruction-set)
 
 ## Establish the control surface
 
@@ -40,8 +41,8 @@ invariants with short reasons, an escalation valve, and triggers for more
 specific skills.
 
 Move commands, procedures, lookup tables, examples, and domain-specific
-exceptions behind task-specific skill triggers. The skill is canonical for its
-procedure; the root file summarizes the invariant and points to the owner.
+exceptions behind task-specific triggers. Let the skill be canonical for its
+procedure; keep only the invariant and pointer in the root.
 
 Write trigger descriptions as concrete conditions such as “use when changing
 database migrations,” not as broad topic labels.
@@ -54,11 +55,11 @@ Classify each proposed instruction:
    secret exposure, destructive data loss, production authority, or history
    corruption. State the consequence that earns the absolute.
 2. **Principle with context:** a judgment rule for variable situations. Explain
-   the objective and priority rather than enumerating every case.
+   the objective and priority instead of enumerating every case.
 3. **Mechanic:** a command, procedure, table, or troubleshooting fact. Put it in
    a triggered skill, tool, or script.
 
-If an instruction does not fit one of these roles, it is probably narration,
+If an instruction fits none of these roles, it is probably narration,
 duplicated convention, or a workaround that should not become policy.
 
 ## Give every rule one owner
@@ -68,43 +69,40 @@ short pointer when discovery still needs it. Do not keep a summary and a
 procedure that can independently evolve into different policies.
 
 Prefer one scoped rule to a rule followed by a growing list of counter-rules.
-State the actual boundary directly. For example, distinguish content-only
-documentation from behavior-bearing instructions instead of saying that all
-documentation is exempt and then adding exceptions.
+State the actual boundary directly.
 
 ## Bound autonomous behavior
 
 Every loop or gate must define:
 
 - what causes it to start;
-- which changes cause it to run again;
+- which material changes cause it to run again;
 - a budget or progress signal;
 - the condition that means success;
 - the condition that means stop and escalate;
 - what a headless agent reports when it cannot ask.
 
-Retrigger only on changes that can affect the result. Bookkeeping, formatting,
-or status updates should not restart a source-code review or test convergence
-loop unless they alter the behavior being checked.
+Do not restart a review or convergence loop for bookkeeping, formatting, or
+status updates that cannot affect its result.
 
 ## Include an escalation valve
 
-Rules record decisions, not laws of physics. Tell the agent to stop and ask the
-owner—with a recommendation—when a required mechanism is unavailable, rules
-conflict, a loop is not converging, or scope is ballooning merely to satisfy the
-written process. A headless agent should report the same decision as `BLOCKED`
-instead of silently choosing or engineering around the rule.
+Tell the agent to stop and ask the owner, with a recommendation, when a required
+mechanism is unavailable, rules conflict, a loop is not converging, or scope is
+ballooning merely to satisfy the written process. A headless agent should report
+the same decision as `BLOCKED` instead of silently choosing or engineering
+around the rule.
 
 ## Name only executable mechanisms
 
 Before requiring a command, gate, permission, reviewer, or environment, verify
-that the bound agent can actually invoke it. If the mechanism is human-only or
-role-gated, say who performs it and what the agent does while waiting.
+that the bound agent can invoke it. If a mechanism is human-only or role-gated,
+name who performs it and what the agent does while waiting.
 
 Date empirical premises that can become stale and state the condition under
-which the rule should be deleted or revisited.
+which the rule should be removed or revisited.
 
-## Review the finished instruction set
+## Review the instruction set
 
 Confirm that:
 
@@ -114,8 +112,7 @@ Confirm that:
 - every topic has one canonical owner;
 - task-specific mechanics stay behind a trigger;
 - temporary facts carry a date or retirement condition;
-- the agent can tell when to proceed, when it has discretion, and when it must
-  stop and ask.
+- the agent can tell when to proceed, use discretion, or stop and ask.
 
 If the rule set keeps growing while the same failures recur, revise the control
-surface instead of adding another layer of reminders.
+surface instead of adding another reminder.

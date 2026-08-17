@@ -1,0 +1,21 @@
+{
+  "name": "agent-writing",
+  "owner": {
+    "name": "James Reyes"
+  },
+  "description": "Reader-first writing tools for coding agents.",
+  "plugins": [
+    {
+      "name": "agent-writing",
+      "source": "./",
+      "description": "A clean writing boundary for coding agents.",
+      "category": "Productivity",
+      "tags": [
+        "writing",
+        "agents",
+        "reader-first"
+      ],
+      "strict": true
+    }
+  ]
+}
