@@ -90,7 +90,7 @@ Current behavior belongs in code, tests, and the owning reference or skill.
 When rationale survives the lifecycle, distill it into current explanation or
 reference. Do not make future readers infer present behavior from a historical
 record. Use `technical-plans.md` for plans and RFCs, and `reports.md` for a
-report or analysis handed to a human reader.
+report or analysis prepared for a decision-maker.
 
 ## Restructure documentation
 

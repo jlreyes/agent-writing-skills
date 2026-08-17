@@ -3,12 +3,12 @@
   "owner": {
     "name": "James Reyes"
   },
-  "description": "Reader-first writing tools for coding agents.",
+  "description": "Reader-first writing tools for prose addressed to humans or agents.",
   "plugins": [
     {
       "name": "agent-writing",
       "source": "./",
-      "description": "A reader-first writing handoff for coding agents.",
+      "description": "A fresh writer and portable guidance for meaningful prose.",
       "category": "Productivity",
       "tags": [
         "writing",

@@ -1,0 +1,28 @@
+[
+  {
+    "id": "fresh-skill-discovery",
+    "prompt": "Draft a concise pull request description for reviewers. The change makes API retries stop after the configured limit instead of retrying forever. Tests cover the limit and the zero-retry case. The remaining limitation is that in-flight requests keep the old limit until they finish. Return only the finished PR description.",
+    "expectSkill": true,
+    "expectDelegation": false
+  },
+  {
+    "id": "durable-agent-instruction",
+    "prompt": "Materially revise the durable agent instruction at {fixture}. The audience is coding agents. The intended behavior is to stop after the first authentication failure, ask the user to sign in, and retry only after authentication state changes. The concrete failure is an agent repeatedly retrying a deployment that cannot authenticate. Preserve unrelated instructions. This exact file is the designated source; no other project file is source material. Return only the revised file.",
+    "expectSkill": true,
+    "expectDelegation": true,
+    "expectedReads": [
+      "evals/fixtures/AGENTS.md",
+      "references/agent-rules.md"
+    ],
+    "forbiddenReads": [
+      "evals/fixtures/unrelated.md"
+    ]
+  },
+  {
+    "id": "trivial-prose-inline",
+    "prompt": "Replace the button label `Retry` with `Try again`. Return only the replacement label.",
+    "expectSkill": false,
+    "expectDelegation": false,
+    "mustInclude": "Try again"
+  }
+]

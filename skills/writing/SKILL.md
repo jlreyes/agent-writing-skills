@@ -1,9 +1,9 @@
 ---
 name: writing
-description: Reader-first English writing for human-facing communication. Use when writing or revising answers, questions, explanations, summaries, recommendations, reports, technical documentation, technical plans, agent rules, or other prose for a human reader. Establish audience, purpose, reader context, information order, proportion, and evidence boundaries, then load specialized guidance only when the output requires it.
+description: Use when writing or materially revising meaningful prose for a human or agent reader, including user responses; README or docs; AGENTS.md or CLAUDE.md; skills or prompts; plans or reports; PR descriptions, reviews, or comments; and code comments or docstrings. Establish audience, purpose, reader context, information order, proportion, and evidence boundaries. Skip trivial labels and mechanical wording changes.
 ---
 
-# Write for humans
+# Write for readers
 
 Make the intended reader able to form the right mental model and take the
 intended next step quickly. Optimize for the reader's time to understanding,
@@ -13,6 +13,10 @@ not for completeness of the writer's narration.
 
 Before writing, establish who the reader is, what they already know, what they
 need to understand, decide, or do, and how much explanation that requires.
+
+For an agent reader, also establish the behavior to produce, the concrete
+failure to prevent, the authority and scope of the instruction, and the
+mechanisms the agent can actually invoke.
 
 When writing from another agent's work, distinguish sharply between
 information available to the upstream agent and information available to the
@@ -95,12 +99,13 @@ specialized communicative job, load the applicable reference:
 
 - Substantive analyses, investigations, reviews, audits, research syntheses, or
   decision briefs: [reports](references/reports.md)
-- Durable README, tutorial, how-to, reference, or explanatory documentation:
+- Content-oriented README, tutorial, how-to, reference, or explanatory
+  documentation:
   [technical documentation](references/technical-documentation.md)
 - RFCs, architecture plans, design documents, or implementation plans:
   [technical plans](references/technical-plans.md)
-- AGENTS.md, CLAUDE.md, skills, prompts, policies, or other text controlling
-  agent behavior: [agent rules](references/agent-rules.md)
+- AGENTS.md, CLAUDE.md, skills, prompts, policies, or other behavior-bearing
+  instructions: [agent rules](references/agent-rules.md)
 
 Layer these operational references only when needed:
 
