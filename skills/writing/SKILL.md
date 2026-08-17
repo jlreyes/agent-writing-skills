@@ -75,8 +75,9 @@ judgment: preserve useful voice and do not turn its examples into word bans.
 
 Then load every artifact reference that matches the writing job:
 
-- Substantive analyses, investigations, reviews, audits, research syntheses, or
-  decision briefs: [reports](references/reports.md)
+- Report-shaped artifacts such as substantive analyses, investigation or audit
+  reports, research syntheses, decision briefs, and formal findings reports:
+  [reports](references/reports.md)
 - Content-oriented README, tutorial, how-to, reference, or explanatory
   documentation:
   [technical documentation](references/technical-documentation.md)

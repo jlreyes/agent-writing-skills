@@ -77,20 +77,27 @@ const styleRouted = writerReads.some((block) =>
 const artifactRouted = testCase.reference === "core" || writerReads.some((block) =>
   block.input?.file_path?.endsWith(`/references/${testCase.reference}.md`));
 const routed = styleRouted && artifactRouted;
+const forbiddenReferenceRead = (testCase.forbiddenReferences ?? []).some((reference) =>
+  writerReads.some((block) =>
+    block.input?.file_path?.endsWith(`/references/${reference}.md`)));
 const failedTool = run.stdout.includes('"is_error":true') ||
   run.stdout.includes("Agent terminated early") ||
   run.stdout.includes("would be spawned with zero tools");
 const result = [...events].reverse().find((event) => event.type === "result");
 
-if (run.status !== 0 || !loaded || !delegated || !routed || failedTool || !result?.result) {
+if (run.status !== 0 || !loaded || !delegated || !routed || forbiddenReferenceRead ||
+    failedTool || !result?.result) {
   process.stderr.write(run.stderr);
   process.stderr.write(run.stdout);
   process.stderr.write(
     "\nEval infrastructure failed: expected a loaded plugin, writer, skill, " +
-    "successful delegation, universal style loading, and the declared artifact-routing behavior.\n",
+    "successful delegation, universal style loading, and the declared allowed/forbidden " +
+    "artifact-routing behavior.\n",
   );
   process.exit(1);
 }
 
-process.stdout.write(`${result.result}\n\nReview criteria:\n`);
+process.stdout.write(
+  `${result.result}\n\nManual review criteria (not evaluated by this runner):\n`,
+);
 for (const criterion of testCase.criteria) process.stdout.write(`- ${criterion}\n`);

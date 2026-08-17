@@ -41,6 +41,20 @@
     ]
   },
   {
+    "id": "cold-review-corporate-correspondence",
+    "reference": "core",
+    "forbiddenReferences": [
+      "reports"
+    ],
+    "handoff": "Cold-review this existing vendor email for reader-first organization and voice. Return three to five consequential findings with the smallest useful fixes; do not rewrite it or infer facts outside the text.\n\nHello Priya,\n\nThank you for your continued partnership as we align on the next phase of this engagement.\n\n1. ORGANIZATION OVERVIEW\n\nHarbor Works operates at the intersection of commerce and innovation, delivering next-generation logistics solutions to enterprise stakeholders.\n\n2. STRATEGIC CONTEXT\n\nThe upcoming workshop represents an important milestone in our broader transformation journey and is material to our cross-functional enablement roadmap.\n\n3. REQUESTED SCHEDULING ADJUSTMENT\n\nPlease move the onboarding workshop from September 8 to September 15 because our operations lead is unavailable on the original date.\n\nWe appreciate your flexibility and remain committed to a successful partnership.\n\nBest regards,\nAlex",
+    "criteria": [
+      "Identify that the September 15 scheduling request is buried and should lead the email.",
+      "Identify the numbered memo headings and generic innovation, enterprise, or transformation framing as an artificial register for direct vendor correspondence.",
+      "Recommend the concrete scheduling reason and action instead of market positioning or inflated partnership language.",
+      "Do not treat the email as a report or invent a more specific sender voice."
+    ]
+  },
+  {
     "id": "research-report",
     "reference": "reports",
     "handoff": "Write a short research synthesis for a CTO deciding whether to pilot passkeys. Source A, the platform vendor documentation, says passkeys resist phishing. Source B, a 14-person customer interview sample, found 9 understood biometric sign-in but only 3 recognized the term passkey. The sample is directional, not representative. Recommend a bounded pilot with user-facing language tests, preserving the evidence limits.",
