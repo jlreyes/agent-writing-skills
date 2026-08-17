@@ -2,110 +2,110 @@
 
 [![skills.sh](https://skills.sh/b/jlreyes/agent-writing-skills)](https://skills.sh/jlreyes/agent-writing-skills)
 
-**Agent Writing is a clean writing boundary for coding agents.**
+Coding agents write from a context their users never saw: implementation names,
+tool output, rejected approaches, debugging chronology, and repository jargon.
+Agent Writing adds one reader-first handoff before that work becomes prose.
 
-Coding agents accumulate implementation details, tool output, debugging
-history, and terminology their users never saw. This plugin provides a fresh,
-tool-poor writer that receives the useful result of that work, models the
-reader's actual context, and produces the human-facing response with one
-progressively disclosed writing system.
+The plugin provides:
 
-The plugin contains:
+- `agent-writing:writer`, a Claude Code subagent with a fresh conversational
+  context and a restricted tool set;
+- `/agent-writing:writing`, one portable Agent Skill that owns the writing rules
+  and progressively loads specialized guidance.
 
-- `agent-writing:writer`, an isolated Claude Code subagent for the final
-  agent-to-human handoff;
-- `/agent-writing:writing`, a portable Agent Skill that owns the universal
-  reader-first rules and loads focused references only when needed.
+The working agent supplies the useful result of its work. The writer treats the
+handoff as evidence, not a draft, and produces the response for a reader who did
+not watch the work happen.
 
-## How it works
+## Install
 
-The working agent hands off the user's request, established facts, decisions,
-uncertainty, citations, and relevant shared context. The writer treats that
-handoff as evidence rather than prose, discards the production chronology, and
-rebuilds the response for a reader who did not watch the work happen.
-
-The writer has one tool, `Read`, and its prompt limits that tool to references
-bundled with the `writing` skill. It cannot run commands, edit files, search the
-web, or invoke other agents, and it is explicitly barred from inspecting the
-repository to accumulate the same implementation context again.
-
-The universal skill always establishes audience, purpose, prior knowledge,
-attention budget, information order, proportion, and evidence boundaries. It
-then selects only the guidance the output needs:
-
-| Reference | Communicative job |
-| --- | --- |
-| `conversation.md` | Answers, questions, status updates, explanations, and short summaries |
-| `reports.md` | Analyses, investigations, audits, research syntheses, and decision briefs |
-| `technical-documentation.md` | README, tutorial, how-to, reference, explanation, and documentation placement |
-| `technical-plans.md` | RFCs, architecture plans, design documents, and implementation plans |
-| `agent-rules.md` | AGENTS.md, CLAUDE.md, skills, prompts, and behavior-bearing policy |
-| `editing.md` | Preservation scope when revising an existing artifact |
-| `style.md` | An optional pass for generic or inflated model prose |
-
-## Install the Claude Code plugin
-
-Add this repository as a marketplace, then install the plugin:
+Add this repository as a Claude Code marketplace, then install the plugin:
 
 ```bash
 claude plugin marketplace add jlreyes/agent-writing-skills
 claude plugin install agent-writing@agent-writing
 ```
 
-Run `/reload-plugins` in an existing Claude Code session after installation.
-
-For local development, clone the repository and launch Claude Code with:
+Run `/reload-plugins` in an existing session after installation. For local
+development, clone the repository and start Claude Code with:
 
 ```bash
 claude --plugin-dir /path/to/agent-writing-skills
 ```
 
-## Use the writer
+## Use
 
-Ask Claude to use `agent-writing:writer` for the final response, select it from
-the `@` agent picker, or mention it directly:
-
-```text
-@agent-agent-writing:writer Write the user-facing response from this result.
-```
-
-The handoff should include:
+Ask Claude to delegate the final response to `agent-writing:writer`, or choose
+that agent from the agent picker. A useful handoff contains:
 
 - the user's request and intended audience;
-- facts established and decisions made;
-- uncertainty and material constraints;
-- evidence or citations that must survive;
-- context the user already knows that affects the answer;
+- established facts and decisions;
+- uncertainty, constraints, and citations that must survive;
+- relevant context the user already knows;
 - the response or decision needed from the user, if any.
 
-Do not draft the response for the writer or include raw logs and debugging
-chronology merely because they exist.
+Do not prewrite the response or include raw logs merely because they exist.
 
-This first version does not automatically intercept every Claude response. The
-calling agent or user deliberately invokes one clean handoff when the quality of
-the human-facing result warrants it.
+The writer is deliberately invoked; this version does not intercept every
+Claude response automatically.
 
-## Use the skill independently
+## Guidance included
 
-The `writing` skill remains compatible with the broader Agent Skills ecosystem:
+The preloaded skill contains the rules for ordinary answers, questions,
+explanations, recommendations, completion notes, and status updates. It loads a
+specialized reference only when the output requires one:
+
+| Reference | Use |
+| --- | --- |
+| `reports.md` | Analyses, investigations, audits, research, and decision briefs |
+| `technical-documentation.md` | README, tutorial, how-to, reference, and explanation |
+| `technical-plans.md` | RFCs, architecture plans, and implementation plans |
+| `agent-rules.md` | AGENTS.md, CLAUDE.md, skills, prompts, and agent policy |
+| `editing.md` | Revisions that must preserve unrelated material |
+| `style.md` | Optional repair of generic or inflated model prose |
+
+The skill can also be installed without the Claude Code agent:
 
 ```bash
 npx skills add jlreyes/agent-writing-skills --skill writing
 ```
 
-Within Claude Code, the plugin skill is also available directly as
-`/agent-writing:writing` when you want the writing system without a fresh
-subagent.
+## Limits of the boundary
 
-## Validation
+This is a context-reduction mechanism, not a security sandbox.
 
-Run the repository checks:
+As of Claude Code 2.1.233, custom subagents start with a fresh conversational
+context but still receive the applicable `CLAUDE.md` hierarchy and a git-status
+snapshot. Claude Code exposes no custom-agent setting that suppresses those
+inputs; only the built-in Explore and Plan agents omit them. See [what Claude
+loads into a
+subagent](https://code.claude.com/docs/en/sub-agents#what-loads-at-startup).
+
+The writer's capability allowlist contains only `Read`, which prevents commands,
+edits, web searches, and further delegation. Its prompt limits `Read` to the
+skill's bundled references, but plugin-shipped agents cannot enforce an
+agent-local path allowlist. That path restriction is behavioral, not a security
+boundary. Revisit these limitations if Claude Code adds per-agent context
+filters or path-scoped file tools.
+
+## Validate and evaluate
+
+Run the platform-facing checks:
 
 ```bash
 node scripts/validate-plugin.mjs
 claude plugin validate --strict .
 npx skills add . --list
 ```
+
+The cases in [`evals/cases.json`](evals/cases.json) cover the reader outcomes
+that matter, including omission and preservation of implementation detail,
+limitations, citations, uncertainty, decisions, reports, plans, and editing.
+Use `node scripts/run-eval.mjs <case-id>` for a live parent-to-writer Claude Code
+run. When `EVAL_PLUGIN_DIR` names an installed cache artifact, the runner also
+adds that directory to Claude's readable roots; plugin loading and file access
+are separate CLI permissions. The live runner requires an authenticated Claude
+CLI and is intentionally not part of unauthenticated CI.
 
 ## License
 

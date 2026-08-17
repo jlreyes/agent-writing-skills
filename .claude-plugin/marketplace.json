@@ -8,7 +8,7 @@
     {
       "name": "agent-writing",
       "source": "./",
-      "description": "A clean writing boundary for coding agents.",
+      "description": "A reader-first writing handoff for coding agents.",
       "category": "Productivity",
       "tags": [
         "writing",

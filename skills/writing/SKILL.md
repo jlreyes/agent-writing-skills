@@ -9,16 +9,10 @@ Make the intended reader able to form the right mental model and take the
 intended next step quickly. Optimize for the reader's time to understanding,
 not for completeness of the writer's narration.
 
-## Start with the rhetorical situation
+## Establish the reader and job
 
-Before drafting, silently establish:
-
-1. **Audience** — Who is reading?
-2. **Prior context** — What can they reasonably be assumed to know?
-3. **Purpose** — What are they trying to understand, decide, or do?
-4. **Delta** — What must change in their mental state?
-5. **Response** — What should they be able to do after reading?
-6. **Attention budget** — How much reading does this outcome justify?
+Before writing, establish who the reader is, what they already know, what they
+need to understand, decide, or do, and how much explanation that requires.
 
 When writing from another agent's work, distinguish sharply between
 information available to the upstream agent and information available to the
@@ -53,6 +47,15 @@ Use the smallest structure that makes the logic easy to recover. Use prose for
 reasoning and causality, lists for genuinely parallel items, tables for repeated
 comparisons, and diagrams for relationships or sequence.
 
+For an ordinary answer, question, recommendation, completion note, or status
+update:
+
+- lead with the answer or outcome;
+- state limitations or blockers that change what the reader can do;
+- include evidence in proportion to the claim;
+- ask only for a decision or action that is actually needed;
+- stop when the reader can understand and act.
+
 ## Make the prose carry the reasoning
 
 Prefer:
@@ -80,36 +83,35 @@ Delete material that does not improve understanding, confidence, or action.
 
 Keep distinct what is known, inferred, recommended, decided, and still
 uncertain. Put material qualifications beside the claims they qualify. Do not
-use confidence of tone to erase uncertainty.
+use confidence of tone to erase uncertainty. Never add factual detail absent
+from the source: plausible specifics become false information. Preserve
+underspecified dates, locations, mechanisms, causes, and product surfaces as
+given.
 
 ## Load specialized guidance only when needed
 
-Before drafting, always use `Read` to load one applicable format reference from
-the first five choices below. The specialized guidance lives outside this file,
-so this step is required. `${CLAUDE_SKILL_DIR}` is the directory containing this
-file.
+The rules above are sufficient for ordinary conversational responses. For a
+specialized communicative job, load the applicable reference:
 
-- Ordinary answers, questions, explanations, recommendations, completion
-  notes, or status updates: `${CLAUDE_SKILL_DIR}/references/conversation.md`
 - Substantive analyses, investigations, reviews, audits, research syntheses, or
-  decision briefs: `${CLAUDE_SKILL_DIR}/references/reports.md`
+  decision briefs: [reports](references/reports.md)
 - Durable README, tutorial, how-to, reference, or explanatory documentation:
-  `${CLAUDE_SKILL_DIR}/references/technical-documentation.md`
+  [technical documentation](references/technical-documentation.md)
 - RFCs, architecture plans, design documents, or implementation plans:
-  `${CLAUDE_SKILL_DIR}/references/technical-plans.md`
+  [technical plans](references/technical-plans.md)
 - AGENTS.md, CLAUDE.md, skills, prompts, policies, or other text controlling
-  agent behavior: `${CLAUDE_SKILL_DIR}/references/agent-rules.md`
+  agent behavior: [agent rules](references/agent-rules.md)
 
 Layer these operational references only when needed:
 
 - Revision of an existing artifact where unrelated content must be preserved:
-  also load `${CLAUDE_SKILL_DIR}/references/editing.md`
+  also load [editing](references/editing.md)
 - Substantial prose showing generic LLM habits or when the user requests a
-  style polish: optionally load `${CLAUDE_SKILL_DIR}/references/style.md`
+  style polish: optionally load [style](references/style.md)
 
-Load a reference because the output has that communicative job, not merely
-because its topic appears in the source material. Combine a format reference
-with `editing.md` when both the artifact type and preservation scope matter.
+Do not load a reference merely because its topic appears in the source
+material. Combine a format reference with `editing.md` only when both the
+artifact type and preservation scope matter.
 
 ## Run the cold-reader test
 

@@ -18,15 +18,14 @@ tools, or implementation components.
 
 ## Build an answer hierarchy
 
-Use Situation-Complication-Question-Answer to discover the real question, then
-use the Pyramid Principle to organize one governing answer supported by a small
-number of distinct, collectively sufficient points. Each supporting point
-should lead to the evidence and reasoning that earn it.
-
-Treat these as thinking tools, not visible template headings. The governing
+Lead with the governing answer. Group support by the logic of that answer, and
+put evidence, reasoning, and qualifications near the claims they support. The
 answer may be a qualified conclusion, a map of unresolved tensions, or a
-finding that the evidence is insufficient. Answer-first writing makes
-uncertainty legible; it does not suppress it.
+finding that the evidence is insufficient.
+
+Situation-Complication-Question-Answer and the Pyramid Principle can help when
+the governing question or support hierarchy is hard to recover. Use them as
+private reasoning aids, not as a required algorithm or visible template.
 
 Order information from highest to lowest consequence:
 

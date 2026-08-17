@@ -17,7 +17,7 @@ consideration”; state the point and let its consequence establish importance.
 ## Prefer real relationships to rhetorical emphasis
 
 Name cause, contrast, condition, consequence, or uncertainty directly. Do not
-use dashes, sentence fragments, bold labels, or repeated “not X but Y”
+use sentence fragments, bold labels, or repeated “not X but Y”
 constructions as substitutes for reasoning.
 
 Use emphasis sparingly. A page where every paragraph contains bold text has no

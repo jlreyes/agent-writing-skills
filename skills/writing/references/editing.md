@@ -3,10 +3,11 @@
 Treat the existing document as intentional. Let the requested change define
 the edit scope; preserve everything else by default.
 
-Prefer a targeted patch over a rewrite. Read enough of the whole document to
-understand the changed section's role and dependencies, then make the smallest
-coherent edit that fully addresses the request. Preserve unrelated sections,
-detail, examples, evidence, rationale, voice, and structure.
+Prefer a targeted patch over a rewrite. The source material should include
+enough of the whole document to establish the changed section's role and
+dependencies. Make the smallest coherent edit that fully addresses the request.
+Preserve unrelated sections, detail, examples, evidence, rationale, voice, and
+structure.
 
 Do not silently rewrite, summarize, compress, merge, reorder, or delete material
 because a cleaner document seems possible. Change dependent passages only when

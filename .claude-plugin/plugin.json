@@ -3,7 +3,7 @@
   "name": "agent-writing",
   "displayName": "Agent Writing",
   "version": "0.2.0",
-  "description": "A clean writing boundary for coding agents, with an isolated reader-first writer and progressively disclosed guidance for human-facing prose.",
+  "description": "A reader-first writing handoff for coding agents, with a focused writer and progressively disclosed guidance for human-facing prose.",
   "author": {
     "name": "James Reyes"
   },
