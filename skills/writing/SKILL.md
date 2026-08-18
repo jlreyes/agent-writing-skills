@@ -1,6 +1,6 @@
 ---
 name: writing
-description: Use for every meaningful prose task for a human or agent, including user responses, README/docs, AGENTS.md/CLAUDE.md, skills, prompts, plans, reports, PR text, substantive comments, and docstrings. Covers authorship, material revision, cold review, and finalization; skip only trivial labels and mechanical wording changes. Establishes audience, purpose, reader context, information order, proportion, style, and evidence boundaries.
+description: Use for every meaningful prose task for a human or agent, including substantive user responses in chat even when another skill or topic is primary; README/docs, AGENTS.md/CLAUDE.md, skills, prompts, plans, reports, PR text, substantive comments, and docstrings. Covers authorship, material revision, cold review, and finalization; skip only trivial labels and mechanical wording changes. Establishes audience, purpose, reader context, information order, proportion, style, and evidence boundaries.
 ---
 
 # Write for readers
