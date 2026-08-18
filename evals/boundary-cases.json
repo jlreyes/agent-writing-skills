@@ -12,6 +12,18 @@
     }
   },
   {
+    "id": "substantive-cross-topic-response",
+    "prompt": "I am exploring a product idea: a neighborhood tool library where members reserve shared equipment and pay only for damage protection. Treat this as early GTM exploration, not a product decision. Tell me what is compelling, challenge the weak assumptions, and preserve the important open questions. Return only your substantive response to me.",
+    "expectSkill": true,
+    "expectDelegation": false,
+    "expectedReads": [
+      "references/style.md"
+    ],
+    "readCanaries": {
+      "references/style.md": "# Universal style pass"
+    }
+  },
+  {
     "id": "durable-agent-instruction",
     "prompt": "Materially revise the durable agent instruction at {fixture}. The audience is coding agents. The intended behavior is to stop after the first authentication failure, ask the user to sign in, and retry only after authentication state changes. The concrete failure is an agent repeatedly retrying a deployment that cannot authenticate. Preserve unrelated instructions. This exact file is the designated source; no other project file is source material. Return only the revised file.",
     "codexPromptPrefix": "Use the installed agent-writing:writing skill for this task and explicitly delegate the material revision to the installed writer agent. Give the writer the audience, intended behavior, concrete failure, constraints, and designated source; do not designate any other project file. Require the writer to open the plugin writing skill, references/style.md, references/agent-rules.md, and references/editing.md before drafting.",
