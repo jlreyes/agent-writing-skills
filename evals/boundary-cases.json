@@ -46,5 +46,25 @@
     "expectSkill": false,
     "expectDelegation": false,
     "mustInclude": "Try again"
+  },
+  {
+    "id": "survey-reference-routing",
+    "prompt": "Draft a short external beta-user survey that will decide whether to keep a weekly summary feature. Ask about actual recent use before future intent, use ordinary language, and keep it under six respondent questions. Return only the instrument.",
+    "claudePromptPrefix": "Use the installed agent-writing:writing skill for this task and explicitly delegate the survey authorship to the agent-writing:writer agent. Give the writer the audience, decision, constraints, and this prompt as the designated source. Require the writer to open references/style.md and references/surveys.md before drafting.",
+    "codexPromptPrefix": "Use the installed agent-writing:writing skill for this task and explicitly delegate the survey authorship to the installed writer agent. Give the writer the audience, decision, constraints, and this prompt as the designated source. Require the writer to open the plugin writing skill, references/style.md, and references/surveys.md before drafting.",
+    "expectSkill": true,
+    "expectDelegation": true,
+    "expectedReads": [
+      "references/style.md",
+      "references/surveys.md"
+    ],
+    "codexExpectedReads": [
+      "skills/writing/SKILL.md"
+    ],
+    "readCanaries": {
+      "skills/writing/SKILL.md": "# Write for readers",
+      "references/style.md": "# Universal style pass",
+      "references/surveys.md": "# Surveys and questionnaires"
+    }
   }
 ]
