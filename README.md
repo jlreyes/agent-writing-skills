@@ -92,6 +92,7 @@ whose artifact or operation matches the writing job:
 | `reports.md` | Analyses, investigations, audits, research, and decision briefs |
 | `technical-documentation.md` | Content-oriented README, tutorial, how-to, reference, and explanation |
 | `technical-plans.md` | RFCs, architecture plans, and implementation plans |
+| `surveys.md` | Product surveys, screeners, questionnaires, polls, and in-product feedback |
 | `agent-rules.md` | Behavior-bearing AGENTS.md, CLAUDE.md, skills, prompts, and policy |
 | `editing.md` | Revisions that must preserve unrelated material |
 | `style.md` | Universal prose judgment and final style pass |

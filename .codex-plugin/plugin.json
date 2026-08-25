@@ -1,6 +1,6 @@
 {
   "name": "agent-writing",
-  "version": "0.2.0+codex.20260817214102",
+  "version": "0.3.0+codex.20260825195254",
   "description": "Reader-first writing guidance for meaningful prose addressed to humans or agents.",
   "author": {
     "name": "James Reyes"
@@ -11,7 +11,8 @@
   "keywords": [
     "writing",
     "agents",
-    "reader-first"
+    "reader-first",
+    "surveys"
   ],
   "skills": "./skills/",
   "interface": {
@@ -26,7 +27,8 @@
     "defaultPrompt": [
       "Write this for a cold reader.",
       "Draft a durable agent instruction.",
-      "Cold-review this plan or report."
+      "Cold-review this plan or report.",
+      "Draft a product survey."
     ]
   }
 }

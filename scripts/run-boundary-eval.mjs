@@ -84,7 +84,10 @@ async function runClaude() {
   try {
     for (const testCase of cases) {
       const fixture = resolve(root, "evals/fixtures/AGENTS.md");
-      const prompt = testCase.prompt.replace("{fixture}", fixture);
+      const casePrompt = testCase.prompt.replace("{fixture}", fixture);
+      const prompt = testCase.claudePromptPrefix
+        ? `${testCase.claudePromptPrefix}\n\n${casePrompt}`
+        : casePrompt;
       const cli = run(
         "claude",
         [

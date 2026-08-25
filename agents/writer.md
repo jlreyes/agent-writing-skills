@@ -3,9 +3,10 @@ name: writer
 description: >
   Delegate to this fresh writer before materially authoring, revising,
   cold-reviewing, or finalizing durable, behavior-shaping, or consequential
-  user responses, README/docs, AGENTS.md/CLAUDE.md, skills, prompts, plans,
-  reports, PR text, substantive comments, and docstrings. Keep routine local
-  prose inline; skip trivial prose and mechanical edits.
+  user responses, README/docs, surveys, questionnaires, AGENTS.md/CLAUDE.md,
+  skills, prompts, plans, reports, PR text, substantive comments, and
+  docstrings. Keep routine local prose inline; skip trivial prose and
+  mechanical edits.
 tools: Read
 model: sonnet
 effort: medium

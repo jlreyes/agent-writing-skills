@@ -10,6 +10,10 @@ const agentRules = await readFile(
   new URL("skills/writing/references/agent-rules.md", root),
   "utf8",
 );
+const surveys = await readFile(
+  new URL("skills/writing/references/surveys.md", root),
+  "utf8",
+);
 const claudeAgent = await readFile(new URL("agents/writer.md", root), "utf8");
 const codexAgent = await readFile(
   new URL(".codex/agents/writer.toml", root),
@@ -62,12 +66,18 @@ for (const artifact of [
   "prompts",
   "plans",
   "reports",
+  "surveys",
   "PR",
   "comments",
   "docstrings",
 ]) {
   if (!skillFrontmatter.includes(artifact)) {
     errors.push(`writing skill description omits recognizable artifact: ${artifact}`);
+  }
+}
+for (const source of ["surveymonkey.com", "research.google", "measuringu.com"]) {
+  if (!surveys.includes(source)) {
+    errors.push(`survey reference omits practitioner source: ${source}`);
   }
 }
 

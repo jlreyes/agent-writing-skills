@@ -135,5 +135,56 @@
       "Distinguish the successful build from the blocked deployment.",
       "Ask for the specific action without exposing internal errors."
     ]
+  },
+  {
+    "id": "survey-translate-research-taxonomy",
+    "reference": "surveys",
+    "handoff": "Draft a focused external survey for ordinary personal-finance users. The product decision is whether to invest in an assistant that helps people complete recurring financial tasks. An upstream brief requires the terms 'workflow' and 'occasion' and groups monthly budgeting, event-driven investing, annual tax filing, and one-off major purchases under one weekly frequency question. It also lets hypothetical usefulness substitute for evidence of whether respondents currently use AI for any of these tasks and asks, 'Thinking about the last time you did this, how do you usually handle it?' The proposed launch triggers only after someone uses an AI feature in a budgeting app, even though the desired inference is about ordinary personal-finance users generally. Challenge or restructure the brief where necessary. Keep the instrument to the smallest set of questions that can inform the decision; do not expose internal research labels.",
+    "criteria": [
+      "Challenge the workflow and occasion taxonomy instead of polishing it into respondent-facing copy.",
+      "Keep actual recent behavior distinct from hypothetical usefulness or future intent, and choose their order deliberately.",
+      "Use recall periods and answer units that fit the natural cadence of each activity rather than one weekly frequency scale.",
+      "Keep a specific episode distinct from usual behavior.",
+      "Flag that an in-app trigger after AI use cannot support an inference about ordinary personal-finance users generally.",
+      "Return a focused instrument without turning the prompt into an omnibus survey."
+    ]
+  },
+  {
+    "id": "survey-method-review-signal-and-routing",
+    "reference": "surveys",
+    "forbiddenReferences": [
+      "reports"
+    ],
+    "handoff": "Act only as the measurement reviewer for this proposed external survey; do not rewrite it wholesale. The private signal note says the intended decision is how much local processing a document assistant needs, the target population is document-software users, and every respondent's device availability is a required analysis variable. The privacy options are presented as a ladder from least to most protective: (A) files are encrypted when not in use; (B) the provider cannot read stored files, but the assistant processes readable files on the provider's servers; (C) files stay on the device, but selected text is sent to the provider; (D) files and processing stay on the device. Respondents who answer that they have never used AI skip past the device-availability question. A page also says 'Display check: select Somewhat agree.' Return only consequential measurement findings and the smallest useful fixes.",
+    "criteria": [
+      "Identify that the privacy ladder changes several dimensions and is not a single monotonic progression.",
+      "Identify the skip path that makes required analysis data unreachable.",
+      "Reject the forced agreement response as a display check and distinguish display, comprehension, and attention evidence.",
+      "Keep the review tied to the private signal note and intended inference instead of treating it as a generic report or copy edit.",
+      "Recommend targeted repairs rather than a wholesale rewrite."
+    ]
+  },
+  {
+    "id": "survey-respondent-review-comprehension",
+    "reference": "surveys",
+    "handoff": "Act only as the respondent reviewer. The audience is self-employed people who handle their own business finances. Review this rendered question without access to the research plan: 'Thinking about this workflow occasion, how much did it affect the work? Not at all / A little / Somewhat / A lot / Not applicable.' The preceding page asked about several activities and the current page does not name which one 'this' refers to. Return only consequential comprehension findings and the smallest respondent-facing fixes. Do not infer or redesign the hidden measurement model.",
+    "criteria": [
+      "Identify workflow occasion as internal language that the audience may not share.",
+      "Identify the ambiguous referents in this and the work.",
+      "Explain how reasonable respondents could answer different questions while choosing the same option.",
+      "Recommend naming one concrete activity and effect without inventing the hidden construct.",
+      "Stay within respondent comprehension rather than claiming to validate the research inference."
+    ]
+  },
+  {
+    "id": "survey-proportionate-internal-pulse",
+    "reference": "surveys",
+    "handoff": "Draft a two-question internal pulse for a six-person team choosing between Tuesday and Thursday for a one-hour training session next week. The decision is reversible, respondents are known colleagues, and the only needed signals are availability and a comment for constraints the options miss. Keep the process and output proportionate.",
+    "criteria": [
+      "Return a genuinely short pulse that directly supports the scheduling decision.",
+      "Do not invent a research ledger, standing review committee, or external pilot.",
+      "Include an honest way to report that neither option works or to name a constraint.",
+      "Do not broaden the survey into training satisfaction or topic discovery."
+    ]
   }
 ]

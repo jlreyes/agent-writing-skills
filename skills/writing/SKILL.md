@@ -1,6 +1,6 @@
 ---
 name: writing
-description: Use for every meaningful prose task for a human or agent, including user responses, README/docs, AGENTS.md/CLAUDE.md, skills, prompts, plans, reports, PR text, substantive comments, and docstrings. Covers authorship, material revision, cold review, and finalization; skip only trivial labels and mechanical wording changes. Establishes audience, purpose, reader context, information order, proportion, style, and evidence boundaries.
+description: Use for every meaningful prose task for a human or agent, including user responses, README/docs, surveys and questionnaires, AGENTS.md/CLAUDE.md, skills, prompts, plans, reports, PR text, substantive comments, and docstrings. Covers authorship, material revision, cold review, and finalization; skip only trivial labels and mechanical wording changes. Establishes audience, purpose, reader context, information order, proportion, style, and evidence boundaries.
 ---
 
 # Write for readers
@@ -83,6 +83,8 @@ Then load every artifact reference that matches the writing job:
   [technical documentation](references/technical-documentation.md)
 - RFCs, architecture plans, design documents, or implementation plans:
   [technical plans](references/technical-plans.md)
+- Product surveys, screeners, questionnaires, polls, or in-product feedback:
+  [surveys](references/surveys.md)
 - AGENTS.md, CLAUDE.md, skills, prompts, policies, or other behavior-bearing
   instructions: [agent rules](references/agent-rules.md). This reference is the
   canonical owner for deciding whether the primary agent writes inline or
