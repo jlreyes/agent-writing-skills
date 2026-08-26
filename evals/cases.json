@@ -177,6 +177,21 @@
     ]
   },
   {
+    "id": "survey-rendered-experience-review",
+    "reference": "surveys",
+    "handoff": "Act only as the post-build survey-experience reviewer for a consequential external survey. The audience is ordinary mobile and desktop users. The rendered form uses the platform's largest question-title style for the form introduction, every instruction, every example, every validation message, and every question. The platform also offers secondary text, three heading levels, dividers, columns, matrices, and conditional display. The form has a qualified route, a paid-screenout route, and three privacy routes whose questions and completion states differ. The author tested one qualified privacy route and described the survey as fully preview-tested, but the current preview environment cannot open the paid-screenout completion state. Return only consequential rendered-experience findings, the smallest useful fixes, and the route recheck needed after those fixes.",
+    "criteria": [
+      "Identify the flattened visual hierarchy between primary questions and secondary instructions, examples, and validation copy.",
+      "Recommend inspecting and deliberately choosing relevant native presentation capabilities without requiring every available feature.",
+      "Require an inventory of materially distinct routes rather than every answer permutation.",
+      "Treat the tested qualified privacy route as partial coverage and name the paid-screenout and other privacy routes as outstanding.",
+      "Treat post-build implementation and later material content, logic, or layout changes as route-QA triggers, and define success as every listed route exercised with no material experience or measurement defect remaining.",
+      "Report the inaccessible paid-screenout state as outstanding and escalate with a recommendation rather than declaring the survey complete.",
+      "Keep the review scoped to rendered composition and route experience rather than rewriting the survey's measurement model.",
+      "Limit rechecking after fixes to affected presentation and respondent routes."
+    ]
+  },
+  {
     "id": "survey-proportionate-internal-pulse",
     "reference": "surveys",
     "handoff": "Draft a two-question internal pulse for a six-person team choosing between Tuesday and Thursday for a one-hour training session next week. The decision is reversible, respondents are known colleagues, and the only needed signals are availability and a comment for constraints the options miss. Keep the process and output proportionate.",

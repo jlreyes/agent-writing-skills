@@ -61,11 +61,13 @@ test, pricing exercise, privacy study, and recruitment screener at once, split
 the research job instead of hiding the collision in more pages.
 
 Branching, requiredness, and presentation can change the data as surely as
-wording can. When the rendered survey is accessible, read every path end to
-end; otherwise name route and presentation verification as outstanding. A skip
-must not bypass data needed later, a required item must remain reachable, and a
-forced-answer item is an instruction-following check, not a display check or
-proof of general comprehension and attention.
+wording can. Before implementation, inspect the relevant native components and
+formatting capabilities of the available platform, then choose the presentation
+that makes each question, instruction, and transition easiest to understand.
+Do not use a capability merely because it exists; use it when it improves the
+respondent's task. A skip must not bypass data needed later, a required item
+must remain reachable, and a forced-answer item is an instruction-following
+check, not a display check or proof of general comprehension and attention.
 
 ## Review from both sides
 
@@ -95,6 +97,29 @@ justify it. If that testing is outside the agent's authority or available
 mechanisms, report the limitation and recommendation instead of declaring the
 instrument launch-ready. Use a lighter process for a low-stakes internal pulse;
 proportionality is part of the method.
+
+## Inspect the rendered survey experience
+
+After implementation, use the existing fresh writer role in a separate,
+independent survey-experience review context. Give that reviewer the rendered
+instrument, audience context, and an inventory of materially distinct
+respondent routes; ask whether the actual composition, visual hierarchy,
+grouping, spacing, device presentation, and transitions make the primary task
+clear and give instructions, examples, and other secondary copy proportionate
+weight. This is not a permanent third reviewer role. It is a post-build review
+of the interface that respondents will use.
+
+Start route QA after implementation and after any material content, logic, or
+layout change. Enumerate materially distinct routes rather than every answer
+permutation, then exercise each listed route end to end, including
+qualification, disqualification, and branches whose questions, requirements,
+or completion state differ. Success means every listed route was exercised and
+no material experience or measurement defect remains; after an edit, recheck
+only the affected routes and presentation. Call this “rendered-path testing”
+only when that full listed route set was covered. If the route set, rendered
+form, or relevant platform capabilities cannot be inspected, report what is
+outstanding and escalate with a recommendation rather than declaring the survey
+complete.
 
 ## Source basis
 
