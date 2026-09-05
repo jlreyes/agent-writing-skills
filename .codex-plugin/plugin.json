@@ -1,6 +1,6 @@
 {
   "name": "agent-writing",
-  "version": "0.3.1+codex.20260826163358",
+  "version": "0.3.2+codex.20260905",
   "description": "Reader-first writing guidance for meaningful prose addressed to humans or agents.",
   "author": {
     "name": "James Reyes"

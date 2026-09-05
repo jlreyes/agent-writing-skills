@@ -64,6 +64,34 @@ The skill can also be installed independently:
 npx skills add jlreyes/agent-writing-skills --skill writing
 ```
 
+## Release and update
+
+A writing release keeps one portable `skills/writing/` tree current across the
+Claude plugin, Codex plugin, native Codex writer, and skills.sh project copies.
+Use the native installer or runtime command for each channel; do not create a
+separate sync script or a consumer-specific copy of the writing instructions.
+
+Update installed plugin channels with their native CLIs:
+
+```bash
+claude plugin marketplace update agent-writing
+claude plugin update agent-writing@agent-writing
+codex plugin marketplace upgrade agent-writing
+codex plugin add agent-writing@agent-writing
+```
+
+From an updated source checkout, update the native Codex writer. From the
+consumer project, update its skills.sh copy:
+
+```bash
+node scripts/install-codex-agent.mjs --force
+npx --yes skills update writing -p -y
+```
+
+After each release, compare the full installed `skills/writing/` reference tree
+with the source tree and run the relevant discovery and behavior checks in every
+supported runtime.
+
 ## Use
 
 Use the delegation criteria and handoff contract in the canonical
