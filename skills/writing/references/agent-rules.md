@@ -16,6 +16,7 @@ architecture or placement of durable documentation.
 
 - [Establish the control surface](#establish-the-control-surface)
 - [Give durable prose fresh-writer ownership](#give-durable-prose-fresh-writer-ownership)
+- [Keep shared skills portable](#keep-shared-skills-portable)
 - [Make descriptions dispatch correctly](#make-descriptions-dispatch-correctly)
 - [Spend always-loaded context carefully](#spend-always-loaded-context-carefully)
 - [Choose the right kind of rule](#choose-the-right-kind-of-rule)
@@ -80,6 +81,19 @@ comments, docstrings, PR text, or several inline passages can be reviewed in one
 batched writer call when useful. Batching is a latency optimization, not a
 mandatory end-of-turn gate. Use one writer for authorship, material revision,
 cold review, and final handoffs rather than adding another writing role.
+
+## Keep shared skills portable
+
+Unless a skill is deliberately scoped to one runtime, author its instructions
+and references for both Claude and Codex. Keep writing quality, delegation, and
+other shared behavior in the portable skill and its references so consumers do
+not accumulate their own drifting instruction manuals.
+
+Native skill creators own runtime packaging, manifests, and installation.
+Keep runtime-specific tools, model settings, and installation details in native
+adapters or runtime-specific references. State an intentional single-runtime
+scope explicitly. When a change affects discovery or behavior, validate the
+affected path in each runtime the skill supports.
 
 ## Make descriptions dispatch correctly
 
@@ -213,6 +227,8 @@ Confirm that:
   material-change retrigger;
 - every mechanism is available to the agent it binds;
 - every topic has one canonical owner;
+- shared skills separate portable instructions from runtime packaging and
+  runtime-specific mechanics;
 - task-specific mechanics stay behind a trigger;
 - temporary facts carry a date or retirement condition;
 - the agent can tell when to proceed, use discretion, or stop and ask.
