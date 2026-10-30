@@ -87,8 +87,7 @@ Then load every artifact reference that matches the writing job:
   [surveys](references/surveys.md)
 - AGENTS.md, CLAUDE.md, skills, prompts, policies, or other behavior-bearing
   instructions: [agent rules](references/agent-rules.md). This reference is the
-  canonical owner for deciding whether the primary agent writes inline or
-  delegates to a fresh writer; follow its decision before drafting.
+  canonical owner for instruction design.
 
 - Revision of an existing artifact where unrelated content must be preserved:
   also load [editing](references/editing.md)

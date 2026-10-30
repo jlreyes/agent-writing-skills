@@ -15,7 +15,7 @@ architecture or placement of durable documentation.
 ## Contents
 
 - [Establish the control surface](#establish-the-control-surface)
-- [Give durable prose fresh-writer ownership](#give-durable-prose-fresh-writer-ownership)
+- [Author prose in the working context](#author-prose-in-the-working-context)
 - [Keep shared skills portable](#keep-shared-skills-portable)
 - [Make descriptions dispatch correctly](#make-descriptions-dispatch-correctly)
 - [Spend always-loaded context carefully](#spend-always-loaded-context-carefully)
@@ -41,53 +41,35 @@ Before editing, identify:
 Do not add a rule when a tool, type, test, schema, or repository structure can
 make the desired behavior automatic and observable.
 
-## Give durable prose fresh-writer ownership
+## Author prose in the working context
 
-The more durable and behavior-shaping the prose, the more valuable authorship
-from a fresh writer becomes. A material mistake in an ordinary user response is
-often contained to one exchange; a material mistake in a README, `AGENTS.md`,
-`CLAUDE.md`, skill, prompt, or other instruction can mislead many readers or
-propagate through later agent sessions. Consequential user responses still earn
-fresh-writer ownership even when they are not durable.
+The agent doing the work owns authorship, material revision, and finalization.
+It already holds the facts, decisions, evidence, and uncertainty the prose must
+carry, so it writes the prose directly instead of handing it to a separate
+writer agent.
 
-As package policy, default material authorship or revision of those durable
-surfaces to the same fresh writer used for cold review and final handoffs. This
-is especially important for behavior-bearing instructions, but it also applies
-to substantial content-only documentation. Keep the distinction explicit:
-documentation explains a system to a reader; an instruction changes what an
-agent will do. When a document does both, apply this reference to the
-behavior-bearing parts and `technical-documentation.md` to the explanatory
-parts.
+The more durable and behavior-shaping the prose, the more care it needs. A
+material mistake in an ordinary user response is often contained to one
+exchange; a material mistake in a README, `AGENTS.md`, `CLAUDE.md`, skill,
+prompt, or other instruction can mislead many readers or propagate through
+later agent sessions. These surfaces most need the reference loading and
+cold-reader test that the skill already requires.
 
-The primary agent still owns the facts and decisions. Its handoff should give
-the writer:
+Keep the distinction explicit: documentation explains a system to a reader; an
+instruction changes what an agent will do. When a document does both, apply
+this reference to the behavior-bearing parts and `technical-documentation.md`
+to the explanatory parts.
 
-- the audience and intended behavior or reader outcome;
-- the concrete failure the prose must prevent;
-- the decisions, evidence, constraints, and uncertainty that must survive;
-- the exact source material needed, either inline or as designated files and
-  passages.
-
-Fresh context means controlled context, not no context. As an authorship and
-authority boundary for this package, the writer may read the files or passages
-explicitly designated in the handoff, but should not explore the repository
-independently to invent or recover missing premises. A missing material premise
-goes back to the primary agent.
-
-Routine local prose can stay with the primary agent when implementation context
-and latency matter: a trivial label, a mechanical wording change, or a short
-comment that merely restates nearby code does not earn a handoff. Substantive
-comments, docstrings, PR text, or several inline passages can be reviewed in one
-batched writer call when useful. Batching is a latency optimization, not a
-mandatory end-of-turn gate. Use one writer for authorship, material revision,
-cold review, and final handoffs rather than adding another writing role.
+Keep independent code, test, and domain review separate from authorship.
+Reviewers assess the implementation or instrument; the authoring agent makes
+the resulting prose changes.
 
 ## Keep shared skills portable
 
 Unless a skill is deliberately scoped to one runtime, author its instructions
-and references for both Claude and Codex. Keep writing quality, delegation, and
-other shared behavior in the portable skill and its references so consumers do
-not accumulate their own drifting instruction manuals.
+and references for both Claude and Codex. Keep writing quality and other shared
+behavior in the portable skill and its references so consumers do not
+accumulate their own drifting instruction manuals.
 
 Native skill creators own runtime packaging, manifests, and installation.
 Keep runtime-specific tools, model settings, and installation details in native
@@ -98,13 +80,13 @@ affected path in each runtime the skill supports.
 ## Make descriptions dispatch correctly
 
 Treat agent and skill descriptions as part of the control surface. They decide
-whether the right guidance or writer is available before its body can help.
+whether the right guidance is available before its body can help.
 
-Lead with the concrete condition for loading or delegation, then name the
-artifacts people recognize: user responses, README and docs, `AGENTS.md` and
-`CLAUDE.md`, skills, prompts, plans, reports, PR text, comments, and docstrings.
-Include the negative boundary for trivial prose when over-activation would add
-latency without changing the result.
+Lead with the concrete condition for loading, then name the artifacts people
+recognize: user responses, README and docs, `AGENTS.md` and `CLAUDE.md`,
+skills, prompts, plans, reports, PR text, comments, and docstrings. Include the
+negative boundary for trivial prose when over-activation would add latency
+without changing the result.
 
 Verify discovery and activation in fresh sessions through the real installed
 runtime. A description that reads well in source but does not cause the skill
@@ -207,11 +189,14 @@ tone, or edge-case handling. Examples are a tool, not a default substitute for
 a clear interface.
 
 The every-meaningful-prose activation rule, universal style-reference loading,
-fresh-writer ownership, controlled context, dispatch heuristics,
-hard-invariant/principle/mechanic categories, bounded-loop contract,
-escalation valve, and executable-mechanism check are package policy derived
-from observed agent failures. Keep them only while they continue to prevent
-those failures; do not attribute them to Anthropic.
+dispatch heuristics, hard-invariant/principle/mechanic categories, bounded-loop
+contract, escalation valve, and executable-mechanism check are package policy
+derived from observed agent failures. Keep them only while they continue to
+prevent those failures; do not attribute them to Anthropic.
+
+Working-context authorship is also package policy. It replaced a separate
+writer agent to remove handoff latency; revisit it if inline prose quality
+drops.
 
 Primary sources:
 

@@ -3,7 +3,7 @@
     "id": "fresh-skill-discovery",
     "prompt": "Before drafting, open and follow the installed agent-writing:writing SKILL.md and its required references/style.md. Then write a concise response to a user explaining that the Retry button is temporarily disabled after an authentication failure to prevent repeated failures, and becomes available once their sign-in state changes. Return only the finished response.",
     "expectSkill": true,
-    "expectDelegation": false,
+    "forbidSubagents": true,
     "expectedReads": [
       "references/style.md"
     ],
@@ -14,9 +14,9 @@
   {
     "id": "durable-agent-instruction",
     "prompt": "Materially revise the durable agent instruction at {fixture}. The audience is coding agents. The intended behavior is to stop after the first authentication failure, ask the user to sign in, and retry only after authentication state changes. The concrete failure is an agent repeatedly retrying a deployment that cannot authenticate. Preserve unrelated instructions. This exact file is the designated source; no other project file is source material. Return only the revised file.",
-    "codexPromptPrefix": "Use the installed agent-writing:writing skill for this task and explicitly delegate the material revision to the installed writer agent. Give the writer the audience, intended behavior, concrete failure, constraints, and designated source; do not designate any other project file. Require the writer to open the plugin writing skill, references/style.md, references/agent-rules.md, and references/editing.md before drafting.",
+    "codexPromptPrefix": "Use the installed agent-writing:writing skill for this task. Open the plugin writing skill, references/style.md, references/agent-rules.md, and references/editing.md before drafting.",
     "expectSkill": true,
-    "expectDelegation": true,
+    "forbidSubagents": true,
     "expectedReads": [
       "evals/fixtures/AGENTS.md",
       "references/style.md",
@@ -44,16 +44,15 @@
     "id": "trivial-prose-inline",
     "prompt": "Replace the button label `Retry` with `Try again`. Return only the replacement label.",
     "expectSkill": false,
-    "expectDelegation": false,
+    "forbidSubagents": true,
     "mustInclude": "Try again"
   },
   {
     "id": "survey-reference-routing",
     "prompt": "Draft a short external beta-user survey that will decide whether to keep a weekly summary feature. Ask about actual recent use before future intent, use ordinary language, and keep it under six respondent questions. Return only the instrument.",
-    "claudePromptPrefix": "Use the installed agent-writing:writing skill for this task and explicitly delegate the survey authorship to the agent-writing:writer agent. Give the writer the audience, decision, constraints, and this prompt as the designated source. Require the writer to open references/style.md and references/surveys.md before drafting.",
-    "codexPromptPrefix": "Use the installed agent-writing:writing skill for this task and explicitly delegate the survey authorship to the installed writer agent. Give the writer the audience, decision, constraints, and this prompt as the designated source. Require the writer to open the plugin writing skill, references/style.md, and references/surveys.md before drafting.",
+    "claudePromptPrefix": "Use the installed agent-writing:writing skill for this task. Open references/style.md and references/surveys.md before drafting.",
+    "codexPromptPrefix": "Use the installed agent-writing:writing skill for this task. Open the plugin writing skill, references/style.md, and references/surveys.md before drafting.",
     "expectSkill": true,
-    "expectDelegation": true,
     "expectedReads": [
       "references/style.md",
       "references/surveys.md"

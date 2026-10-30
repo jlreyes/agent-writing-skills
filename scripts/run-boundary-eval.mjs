@@ -126,9 +126,8 @@ async function runClaude() {
       );
       const loaded =
         init?.plugins?.some((plugin) => plugin.name === "agent-writing") &&
-        init?.agents?.includes("agent-writing:writer") &&
         init?.skills?.includes("agent-writing:writing");
-      if (!loaded) issues.push("installed plugin, writer, and skill were not discovered");
+      if (!loaded) issues.push("installed plugin and skill were not discovered");
 
       const blocks = events.flatMap((event) =>
         event.type === "assistant" ? (event.message?.content ?? []) : [],
@@ -139,21 +138,21 @@ async function runClaude() {
           block.name === "Skill" &&
           JSON.stringify(block.input).includes("agent-writing:writing"),
       );
-      const delegated = blocks.some(
+      const subagentLaunched = blocks.some(
         (block) =>
-          block.type === "tool_use" &&
-          ["Agent", "Task"].includes(block.name) &&
-          block.input?.subagent_type === "agent-writing:writer",
+          block.type === "tool_use" && ["Agent", "Task"].includes(block.name),
       );
-      const writerReads = events.flatMap((event) =>
-        event.type === "assistant" &&
-        (event.parent_tool_use_id || event.message?.parent_tool_use_id)
-          ? (event.message?.content ?? []).filter(
-              (block) => block.type === "tool_use" && block.name === "Read",
-            )
-          : [],
-      );
-      const readPaths = writerReads.map((block) => block.input?.file_path ?? "");
+      const mainReadPaths = events
+        .flatMap((event) =>
+          event.type === "assistant" &&
+          !event.parent_tool_use_id &&
+          !event.message?.parent_tool_use_id
+            ? (event.message?.content ?? []).filter(
+                (block) => block.type === "tool_use" && block.name === "Read",
+              )
+            : [],
+        )
+        .map((block) => block.input?.file_path ?? "");
       const allReadPaths = blocks
         .filter((block) => block.type === "tool_use" && block.name === "Read")
         .map((block) => block.input?.file_path ?? "");
@@ -168,26 +167,18 @@ async function runClaude() {
         .reverse()
         .find((event) => event.type === "result")?.result;
 
-      if (testCase.expectSkill && testCase.id === "fresh-skill-discovery" && !skillActivated) {
-        issues.push("writing skill did not activate implicitly");
+      if (testCase.expectSkill && !skillActivated) {
+        issues.push("writing skill did not activate");
       }
       if (!testCase.expectSkill && skillActivated) {
         issues.push("writing skill activated for trivial prose");
       }
-      if (delegated !== testCase.expectDelegation) {
-        issues.push(
-          testCase.expectDelegation
-            ? "writer was not delegated"
-            : "writer was delegated unexpectedly",
-        );
+      if (testCase.forbidSubagents && subagentLaunched) {
+        issues.push("writing was handed to a subagent");
       }
       for (const expected of testCase.expectedReads ?? []) {
-        const paths =
-          expected.startsWith("references/") && testCase.expectDelegation
-            ? readPaths
-            : allReadPaths;
-        if (!paths.some((path) => path.endsWith(expected))) {
-          issues.push(`controlled session did not read designated ${expected}`);
+        if (!mainReadPaths.some((path) => path.endsWith(expected))) {
+          issues.push(`authoring session did not read designated ${expected}`);
         }
       }
       for (const forbidden of testCase.forbiddenReads ?? []) {
@@ -297,14 +288,6 @@ async function installCodexPlugin() {
   if (install.status !== 0) throw new Error(install.stderr || install.stdout);
 
   await mkdir(join(projectDir, "evals/fixtures"), { recursive: true });
-  const installAgent = run(
-    process.execPath,
-    [resolve(root, "scripts/install-codex-agent.mjs")],
-    { env },
-  );
-  if (installAgent.status !== 0) {
-    throw new Error(installAgent.stderr || installAgent.stdout);
-  }
   await cp(resolve(root, "evals/fixtures"), join(projectDir, "evals/fixtures"), {
     recursive: true,
   });
@@ -340,7 +323,6 @@ async function runCodex() {
         "-c", trust,
         "-C", installed.projectDir,
       ];
-      if (!testCase.expectDelegation) args.push("--ephemeral");
       args.push(prompt);
       const cli = run("codex", args, { cwd: installed.projectDir, env: installed.env });
       const issues = [];
@@ -378,7 +360,7 @@ async function runCodex() {
       const skillActivated =
         commandText.includes("/skills/writing/SKILL.md") &&
         commandText.includes("# Write for readers");
-      const spawn = parent.find(
+      const spawned = parent.some(
         (event) =>
           event.type === "response_item" &&
           event.payload?.type === "function_call" &&
@@ -393,9 +375,6 @@ async function runCodex() {
       const child = childId
         ? await readRollout(resolve(installed.configDir, "sessions"), childId)
         : [];
-      const childMeta = child.find((event) => event.type === "session_meta")?.payload;
-      const childTurn = child.find((event) => event.type === "turn_context")?.payload;
-      const agentRole = childMeta?.source?.subagent?.thread_spawn?.agent_role;
       const childToolCalls = completedToolCalls(child);
       const parentToolCalls = completedToolCalls(parent);
       const observedToolCalls = [
@@ -419,66 +398,34 @@ async function runCodex() {
       if (!testCase.expectSkill && skillActivated) {
         issues.push("writing skill activated for trivial prose");
       }
-      if (!testCase.expectDelegation && spawn) {
-        issues.push("writer was delegated unexpectedly");
+      if (testCase.forbidSubagents && spawned) {
+        issues.push("writing was handed to a subagent");
       }
-      if (testCase.expectDelegation) {
-        if (!spawn) {
-          issues.push("Codex did not delegate to the installed writer");
-        } else if (agentRole !== "writer") {
-          issues.push(`Codex launched agent role ${agentRole ?? "unknown"}, not writer`);
+      const expectedReads = [
+        ...(testCase.expectedReads ?? []),
+        ...(testCase.codexExpectedReads ?? []),
+      ];
+      for (const expected of expectedReads) {
+        if (
+          !hasReadEvidence(
+            [...parentToolCalls, ...streamToolCalls],
+            expected,
+            testCase.readCanaries?.[expected],
+          )
+        ) {
+          issues.push(`authoring session did not read designated ${expected}`);
         }
-        if (spawn && childTurn?.model !== "gpt-5.6-terra") {
-          issues.push(`writer used model ${childTurn?.model ?? "unknown"}, not gpt-5.6-terra`);
-        }
-        if (spawn && childTurn?.effort !== "medium") {
-          issues.push(`writer used effort ${childTurn?.effort ?? "unknown"}, not medium`);
-        }
-        const expectedReads = [
-          ...(testCase.expectedReads ?? []),
-          ...(testCase.codexExpectedReads ?? []),
-        ];
-        for (const expected of expectedReads) {
-          const calls =
-            expected.startsWith("references/") ||
-            expected.startsWith("skills/writing/")
-            ? childToolCalls
-            : [...parentToolCalls, ...childToolCalls];
-          if (
-            spawn &&
-            !hasReadEvidence(
-              calls,
-              expected,
-              testCase.readCanaries?.[expected],
-            )
-          ) {
-            issues.push(`writer did not read designated ${expected}`);
-          }
-        }
-        for (const forbidden of testCase.forbiddenReads ?? []) {
-          const calls = [...parentToolCalls, ...childToolCalls];
-          const canary = testCase.forbiddenCanaries?.[forbidden];
-          if (
-            calls.some(
-              (call) =>
-                call.arguments.includes(forbidden) ||
-                (canary && call.output.includes(canary)),
-            )
-          ) {
-            issues.push(`session explored forbidden ${forbidden}`);
-          }
-        }
-      } else {
-        for (const expected of testCase.expectedReads ?? []) {
-          if (
-            !hasReadEvidence(
-              [...parentToolCalls, ...streamToolCalls],
-              expected,
-              testCase.readCanaries?.[expected],
-            )
-          ) {
-            issues.push(`session did not read designated ${expected}`);
-          }
+      }
+      for (const forbidden of testCase.forbiddenReads ?? []) {
+        const canary = testCase.forbiddenCanaries?.[forbidden];
+        if (
+          observedToolCalls.some(
+            (call) =>
+              call.arguments.includes(forbidden) ||
+              (canary && call.output.includes(canary)),
+          )
+        ) {
+          issues.push(`session explored forbidden ${forbidden}`);
         }
       }
       if (!result) issues.push("no final result");
