@@ -14,11 +14,6 @@ const surveys = await readFile(
   new URL("skills/writing/references/surveys.md", root),
   "utf8",
 );
-const claudeAgent = await readFile(new URL("agents/writer.md", root), "utf8");
-const codexAgent = await readFile(
-  new URL(".codex/agents/writer.toml", root),
-  "utf8",
-);
 const codexManifest = JSON.parse(
   await readFile(new URL(".codex-plugin/plugin.json", root), "utf8"),
 );
@@ -81,24 +76,6 @@ for (const source of ["surveymonkey.com", "research.google", "measuringu.com"]) 
   }
 }
 
-if (!claudeAgent.includes("description: >\n  Delegate to this fresh writer")) {
-  errors.push("Claude writer description must lead with its delegation condition");
-}
-if (!claudeAgent.includes("model: sonnet") || !claudeAgent.includes("effort: medium")) {
-  errors.push("Claude writer must declare Sonnet at medium effort");
-}
-if (claudeAgent.includes("maxTurns:")) {
-  errors.push("Claude writer must not impose an arbitrary turn ceiling");
-}
-if (!codexAgent.includes('name = "writer"') || !codexAgent.includes('description = "Delegate to this fresh writer')) {
-  errors.push("Codex writer must use the native standalone custom-agent schema");
-}
-if (!codexAgent.includes('model = "gpt-5.6-terra"') || !codexAgent.includes('model_reasoning_effort = "medium"')) {
-  errors.push("Codex writer must declare Terra at medium effort");
-}
-if (!codexAgent.includes("developer_instructions")) {
-  errors.push("Codex writer role must define developer instructions");
-}
 if (!skill.includes("For every activation, load [style]")) {
   errors.push("writing skill must always load the universal style reference");
 }
@@ -110,13 +87,18 @@ for (const source of [
     errors.push(`canonical agent-rules reference omits source grounding: ${source}`);
   }
 }
-try {
-  await access(new URL(".codex/config.toml", root));
-  errors.push("Codex adapter must not use the obsolete [agents.writer] indirection");
-} catch (error) {
-  if (error.code !== "ENOENT") throw error;
+for (const removed of [
+  "agents/writer.md",
+  ".codex/agents/writer.toml",
+  "scripts/install-codex-agent.mjs",
+]) {
+  try {
+    await access(new URL(removed, root));
+    errors.push(`writing is authored inline; remove the writer adapter ${removed}`);
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+  }
 }
-await access(new URL("scripts/install-codex-agent.mjs", root));
 if (codexManifest.skills !== "./skills/") {
   errors.push("Codex plugin manifest must expose the portable skill directory");
 }
@@ -136,16 +118,12 @@ if (
   errors.push("Codex marketplace must declare explicit installation and authentication policy");
 }
 
-const doctrine = "The more durable and behavior-shaping the prose";
+const doctrine = "The agent doing the work owns authorship";
 if (!agentRules.includes(doctrine)) {
   errors.push("canonical agent-rules reference is missing the ownership doctrine");
 }
-for (const [name, text] of [
-  ["portable skill", skill],
-  ["Claude adapter", claudeAgent],
-  ["Codex adapter", codexAgent],
-]) {
-  if (text.includes(doctrine)) errors.push(`${name} duplicates the canonical doctrine`);
+if (skill.includes(doctrine)) {
+  errors.push("portable skill duplicates the canonical doctrine");
 }
 
 if (errors.length > 0) {

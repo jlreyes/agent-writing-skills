@@ -8,7 +8,7 @@
     {
       "name": "agent-writing",
       "source": "./",
-      "description": "A fresh writer and portable guidance for meaningful prose.",
+      "description": "Portable reader-first guidance for meaningful prose.",
       "category": "Productivity",
       "tags": [
         "writing",

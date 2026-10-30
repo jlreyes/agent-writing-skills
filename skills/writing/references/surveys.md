@@ -71,17 +71,19 @@ check, not a display check or proof of general comprehension and attention.
 
 ## Review from both sides
 
-For a consequential or novel external survey, comprehension and measurement
-are distinct failure modes. When both are material, the primary agent should
-use the existing fresh writer role in two independent cold-review contexts
-after the author drafts. Give the respondent reviewer only the audience context
-and rendered instrument; ask where a target respondent could misunderstand the
-task, recall a different experience, lack an honest option, follow a broken
-path, or struggle with the actual device and presentation. Give the measurement
-reviewer the private signal note as well; ask whether the instrument supports
-the intended inference, keeps behavior distinct from attitude and intention,
-uses defensible comparisons and timeframes, and avoids leading, ordering,
-sampling, privacy, and routing artifacts.
+For a consequential or novel external survey, comprehension and measurement are
+distinct failure modes. When both are material, the primary agent should use
+two independent cold reviewers, such as fresh subagents given only the material
+described below, after the author drafts. If no separate context is available,
+say that independent review was not performed. Give the respondent reviewer
+only the audience context and rendered instrument; ask where a target
+respondent could misunderstand the task, recall a different experience, lack an
+honest option, follow a broken path, or struggle with the actual device and
+presentation. Give the measurement reviewer the private signal note as well;
+ask whether the instrument supports the intended inference, keeps behavior
+distinct from attitude and intention, uses defensible comparisons and
+timeframes, and avoids leading, ordering, sampling, privacy, and routing
+artifacts.
 
 These are scoped reviews, not new permanent roles. The author reconciles them
 against the decision in a bounded revise-and-recheck loop, normally one
@@ -100,8 +102,8 @@ proportionality is part of the method.
 
 ## Inspect the rendered survey experience
 
-After implementation, use the existing fresh writer role in a separate,
-independent survey-experience review context. Give that reviewer the rendered
+After implementation, use an independent survey-experience reviewer in a
+separate context, such as a fresh subagent. Give that reviewer the rendered
 instrument, audience context, and an inventory of materially distinct
 respondent routes; ask whether the actual composition, visual hierarchy,
 grouping, spacing, device presentation, and transitions make the primary task

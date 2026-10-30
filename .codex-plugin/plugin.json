@@ -1,6 +1,6 @@
 {
   "name": "agent-writing",
-  "version": "0.3.2+codex.20260905",
+  "version": "0.4.0+codex.20261030",
   "description": "Reader-first writing guidance for meaningful prose addressed to humans or agents.",
   "author": {
     "name": "James Reyes"
@@ -18,7 +18,7 @@
   "interface": {
     "displayName": "Agent Writing",
     "shortDescription": "Reader-first writing for humans and agents.",
-    "longDescription": "Portable reader-first guidance for meaningful prose, plus a companion fresh-writer agent installed through each runtime's native path.",
+    "longDescription": "Portable reader-first guidance for meaningful prose addressed to humans or agents.",
     "developerName": "James Reyes",
     "category": "Productivity",
     "capabilities": [
