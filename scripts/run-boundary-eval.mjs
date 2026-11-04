@@ -11,7 +11,7 @@ import {
   symlink,
 } from "node:fs/promises";
 import { homedir, tmpdir } from "node:os";
-import { basename, join, resolve } from "node:path";
+import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
@@ -126,8 +126,9 @@ async function runClaude() {
       );
       const loaded =
         init?.plugins?.some((plugin) => plugin.name === "agent-writing") &&
-        init?.skills?.includes("agent-writing:writing");
-      if (!loaded) issues.push("installed plugin and skill were not discovered");
+        init?.skills?.includes("agent-writing:writing") &&
+        init?.agents?.includes("agent-writing:writer");
+      if (!loaded) issues.push("installed plugin, skill, and writer were not discovered");
 
       const blocks = events.flatMap((event) =>
         event.type === "assistant" ? (event.message?.content ?? []) : [],
@@ -141,6 +142,20 @@ async function runClaude() {
       const subagentLaunched = blocks.some(
         (block) =>
           block.type === "tool_use" && ["Agent", "Task"].includes(block.name),
+      );
+      const writerCalls = blocks.filter(
+        (block) => block.type === "tool_use" &&
+          ["Agent", "Task"].includes(block.name) &&
+          block.input?.subagent_type === "agent-writing:writer",
+      );
+      const writerIds = new Set(writerCalls.map((block) => block.id));
+      const writerReadPaths = events.flatMap((event) =>
+        event.type === "assistant" &&
+        writerIds.has(event.parent_tool_use_id ?? event.message?.parent_tool_use_id)
+          ? (event.message?.content ?? []).filter(
+              (block) => block.type === "tool_use" && block.name === "Read",
+            ).map((block) => block.input?.file_path ?? "")
+          : [],
       );
       const mainReadPaths = events
         .flatMap((event) =>
@@ -176,9 +191,14 @@ async function runClaude() {
       if (testCase.forbidSubagents && subagentLaunched) {
         issues.push("writing was handed to a subagent");
       }
+      if (testCase.expectWriter && writerCalls.length !== 1) {
+        issues.push(`expected one final writer pass, observed ${writerCalls.length}`);
+      }
       for (const expected of testCase.expectedReads ?? []) {
-        if (!mainReadPaths.some((path) => path.endsWith(expected))) {
-          issues.push(`authoring session did not read designated ${expected}`);
+        const paths = testCase.expectWriter && expected.startsWith("references/")
+          ? writerReadPaths : mainReadPaths;
+        if (!paths.some((path) => path.endsWith(expected))) {
+          issues.push(`responsible session did not read designated ${expected}`);
         }
       }
       for (const forbidden of testCase.forbiddenReads ?? []) {
@@ -230,6 +250,19 @@ async function readRollout(directory, threadId) {
   return parseJsonLines(await readFile(path, "utf8"));
 }
 
+async function readChildren(directory, parentId) {
+  const children = [];
+  for (const path of await findFiles(directory, ".jsonl")) {
+    const events = parseJsonLines(await readFile(path, "utf8"));
+    const meta = events.find((event) => event.type === "session_meta")?.payload;
+    const source = meta?.source?.subagent?.thread_spawn;
+    if (source?.parent_thread_id === parentId) {
+      children.push({ events, role: source.agent_role });
+    }
+  }
+  return children;
+}
+
 function completedToolCalls(events) {
   const outputs = new Map(
     events
@@ -263,7 +296,9 @@ function completedToolCalls(events) {
 function hasReadEvidence(toolCalls, path, canary) {
   return toolCalls.some(
     (call) =>
-      call.arguments.includes(path) &&
+      (call.arguments.includes(path) ||
+        (canary && call.arguments.includes(dirname(path)) &&
+          call.arguments.includes(basename(path)))) &&
       (!canary || call.output.includes(canary)),
   );
 }
@@ -287,6 +322,12 @@ async function installCodexPlugin() {
   );
   if (install.status !== 0) throw new Error(install.stderr || install.stdout);
 
+  const installAgent = run(
+    process.execPath, [resolve(root, "scripts/install-codex-agent.mjs")], { env },
+  );
+  if (installAgent.status !== 0) {
+    throw new Error(installAgent.stderr || installAgent.stdout);
+  }
   await mkdir(join(projectDir, "evals/fixtures"), { recursive: true });
   await cp(resolve(root, "evals/fixtures"), join(projectDir, "evals/fixtures"), {
     recursive: true,
@@ -315,7 +356,7 @@ async function runCodex() {
         "--ignore-rules",
         "--skip-git-repo-check",
         "-s", "read-only",
-        "-m", process.env.EVAL_CODEX_PARENT_MODEL ?? "gpt-5.6-sol",
+        "-m", process.env.EVAL_CODEX_PARENT_MODEL ?? "gpt-6.1-sol",
         "-c", `model_reasoning_effort=\"${process.env.EVAL_CODEX_PARENT_EFFORT ?? "medium"}\"`,
         "-c", "agents.max_depth=1",
         "-c", "agents.max_concurrent_threads_per_session=4",
@@ -360,27 +401,28 @@ async function runCodex() {
       const skillActivated =
         commandText.includes("/skills/writing/SKILL.md") &&
         commandText.includes("# Write for readers");
-      const spawned = parent.some(
+      const spawnCalls = parent.filter(
         (event) =>
           event.type === "response_item" &&
           event.payload?.type === "function_call" &&
           event.payload?.name === "spawn_agent",
       );
-      const childId = parent.find(
-        (event) =>
-          event.type === "event_msg" &&
-          event.payload?.type === "sub_agent_activity" &&
-          event.payload?.kind === "started",
-      )?.payload?.agent_thread_id;
-      const child = childId
-        ? await readRollout(resolve(installed.configDir, "sessions"), childId)
+      const children = threadId
+        ? await readChildren(resolve(installed.configDir, "sessions"), threadId)
         : [];
+      const writers = children.filter((child) => child.role === "writer");
+      const child = writers[0]?.events ?? [];
+      const writerSpawns = spawnCalls.filter((call) =>
+        JSON.parse(call.payload.arguments).agent_type === "writer",
+      );
+      const spawnArguments = writerSpawns[0]
+        ? JSON.parse(writerSpawns[0].payload.arguments) : {};
       const childToolCalls = completedToolCalls(child);
       const parentToolCalls = completedToolCalls(parent);
       const observedToolCalls = [
         ...streamToolCalls,
         ...parentToolCalls,
-        ...childToolCalls,
+        ...children.flatMap((child) => completedToolCalls(child.events)),
       ];
       if (
         observedToolCalls.some(
@@ -398,8 +440,19 @@ async function runCodex() {
       if (!testCase.expectSkill && skillActivated) {
         issues.push("writing skill activated for trivial prose");
       }
-      if (testCase.forbidSubagents && spawned) {
+      if (testCase.forbidSubagents && spawnCalls.length > 0) {
         issues.push("writing was handed to a subagent");
+      }
+      if (testCase.expectWriter) {
+        if (writerSpawns.length !== 1 || writers.length !== 1) {
+          issues.push(`expected one native writer, observed ${writerSpawns.length} writer spawns and ${writers.length} writer rollouts`);
+        }
+        if (spawnArguments.fork_turns !== "none") {
+          issues.push("writer did not start with a fresh context");
+        }
+        if (completedToolCalls(child).some((call) => call.name === "spawn_agent")) {
+          issues.push("writer delegated recursively");
+        }
       }
       const expectedReads = [
         ...(testCase.expectedReads ?? []),
@@ -408,12 +461,14 @@ async function runCodex() {
       for (const expected of expectedReads) {
         if (
           !hasReadEvidence(
-            [...parentToolCalls, ...streamToolCalls],
+            testCase.expectWriter &&
+              (expected.startsWith("references/") || expected.startsWith("skills/writing/"))
+              ? childToolCalls : [...parentToolCalls, ...streamToolCalls],
             expected,
             testCase.readCanaries?.[expected],
           )
         ) {
-          issues.push(`authoring session did not read designated ${expected}`);
+          issues.push(`responsible session did not read designated ${expected}`);
         }
       }
       for (const forbidden of testCase.forbiddenReads ?? []) {

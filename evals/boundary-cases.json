@@ -9,18 +9,20 @@
     ],
     "readCanaries": {
       "references/style.md": "# Universal style pass"
-    }
+    },
+    "expectWriter": false
   },
   {
     "id": "durable-agent-instruction",
     "prompt": "Materially revise the durable agent instruction at {fixture}. The audience is coding agents. The intended behavior is to stop after the first authentication failure, ask the user to sign in, and retry only after authentication state changes. The concrete failure is an agent repeatedly retrying a deployment that cannot authenticate. Preserve unrelated instructions. This exact file is the designated source; no other project file is source material. Return only the revised file.",
-    "codexPromptPrefix": "Use the installed agent-writing:writing skill for this task. Open the plugin writing skill, references/style.md, references/agent-rules.md, and references/editing.md before drafting.",
+    "codexPromptPrefix": "Use the installed agent-writing:writing skill for this task. Open the plugin writing skill, references/style.md, references/agent-rules.md, and references/editing.md before drafting. Draft in the working agent, then give the completed draft to the installed native writer role in a fresh context with fork_turns set to none for the final plain-language pass. Check its replacement against the source before returning it.",
     "expectSkill": true,
-    "forbidSubagents": true,
     "expectedReads": [
       "evals/fixtures/AGENTS.md",
       "references/style.md",
-      "references/agent-rules.md"
+      "references/agent-rules.md",
+      "references/final-artifacts.md",
+      "references/editing.md"
     ],
     "codexExpectedReads": [
       "skills/writing/SKILL.md",
@@ -31,31 +33,71 @@
       "skills/writing/SKILL.md": "# Write for readers",
       "references/style.md": "# Universal style pass",
       "references/agent-rules.md": "# Agent rules",
-      "references/editing.md": "# Editing existing documents"
+      "references/editing.md": "# Editing existing documents",
+      "references/final-artifacts.md": "# Writer pass for final artifacts"
     },
     "forbiddenReads": [
       "evals/fixtures/unrelated.md"
     ],
     "forbiddenCanaries": {
       "evals/fixtures/unrelated.md": "UNRELATED-CONTEXT-7F3A"
+    },
+    "expectWriter": true
+  },
+  {
+    "id": "intermediate-draft-inline",
+    "prompt": "Use the installed agent-writing:writing skill. Write an internal working draft for a possible PR description about stopping a deployment after the first authentication failure. We are still investigating; this is an intermediate draft, not the final deliverable. There is no agreed behavior or test result yet. Return only the working draft.",
+    "expectSkill": true,
+    "expectWriter": false,
+    "forbidSubagents": true,
+    "expectedReads": [
+      "references/style.md"
+    ],
+    "readCanaries": {
+      "references/style.md": "# Universal style pass"
     }
+  },
+  {
+    "id": "final-pr-description",
+    "prompt": "Use the installed agent-writing:writing skill. Produce the final PR description from this draft for a maintainer who has not seen the work: \"Authentication-state transition enforcement now aborts the deployment at the first authentication failure instead of retrying. The user must sign in before another attempt. Validation: make check passed. A real deployment was not run because the CLI has no authenticated account. Nothing was published.\" Keep every material fact and verification limit. Return only the final PR description.",
+    "codexPromptPrefix": "Draft in the working agent, then give the completed draft to the installed native writer role in a fresh context with fork_turns set to none for the final plain-language pass. Check its replacement against the source before returning it.",
+    "expectSkill": true,
+    "expectWriter": true,
+    "expectedReads": [
+      "references/style.md",
+      "references/final-artifacts.md",
+      "references/editing.md"
+    ],
+    "codexExpectedReads": [
+      "skills/writing/SKILL.md"
+    ],
+    "readCanaries": {
+      "references/style.md": "# Universal style pass",
+      "references/final-artifacts.md": "# Writer pass for final artifacts",
+      "references/editing.md": "# Editing existing documents",
+      "skills/writing/SKILL.md": "# Write for readers"
+    },
+    "mustInclude": "make check"
   },
   {
     "id": "trivial-prose-inline",
     "prompt": "Replace the button label `Retry` with `Try again`. Return only the replacement label.",
     "expectSkill": false,
     "forbidSubagents": true,
-    "mustInclude": "Try again"
+    "mustInclude": "Try again",
+    "expectWriter": false
   },
   {
     "id": "survey-reference-routing",
     "prompt": "Draft a short external beta-user survey that will decide whether to keep a weekly summary feature. Ask about actual recent use before future intent, use ordinary language, and keep it under six respondent questions. Return only the instrument.",
     "claudePromptPrefix": "Use the installed agent-writing:writing skill for this task. Open references/style.md and references/surveys.md before drafting.",
-    "codexPromptPrefix": "Use the installed agent-writing:writing skill for this task. Open the plugin writing skill, references/style.md, and references/surveys.md before drafting.",
+    "codexPromptPrefix": "Use the installed agent-writing:writing skill for this task. Open the plugin writing skill, references/style.md, and references/surveys.md before drafting. Draft in the working agent, then give the completed draft to the installed native writer role in a fresh context with fork_turns set to none for the final plain-language pass. Check its replacement against the source before returning it.",
     "expectSkill": true,
     "expectedReads": [
       "references/style.md",
-      "references/surveys.md"
+      "references/surveys.md",
+      "references/final-artifacts.md",
+      "references/editing.md"
     ],
     "codexExpectedReads": [
       "skills/writing/SKILL.md"
@@ -63,7 +105,10 @@
     "readCanaries": {
       "skills/writing/SKILL.md": "# Write for readers",
       "references/style.md": "# Universal style pass",
-      "references/surveys.md": "# Surveys and questionnaires"
-    }
+      "references/surveys.md": "# Surveys and questionnaires",
+      "references/final-artifacts.md": "# Writer pass for final artifacts",
+      "references/editing.md": "# Editing existing documents"
+    },
+    "expectWriter": true
   }
 ]

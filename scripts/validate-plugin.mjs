@@ -87,16 +87,15 @@ for (const source of [
     errors.push(`canonical agent-rules reference omits source grounding: ${source}`);
   }
 }
-for (const removed of [
+for (const adapter of [
   "agents/writer.md",
   ".codex/agents/writer.toml",
   "scripts/install-codex-agent.mjs",
 ]) {
   try {
-    await access(new URL(removed, root));
-    errors.push(`writing is authored inline; remove the writer adapter ${removed}`);
-  } catch (error) {
-    if (error.code !== "ENOENT") throw error;
+    await access(new URL(adapter, root));
+  } catch {
+    errors.push(`missing writer adapter: ${adapter}`);
   }
 }
 if (codexManifest.skills !== "./skills/") {
@@ -116,14 +115,6 @@ if (
   codexMarketplaceEntry.policy.authentication !== "ON_INSTALL"
 ) {
   errors.push("Codex marketplace must declare explicit installation and authentication policy");
-}
-
-const doctrine = "The agent doing the work owns authorship";
-if (!agentRules.includes(doctrine)) {
-  errors.push("canonical agent-rules reference is missing the ownership doctrine");
-}
-if (skill.includes(doctrine)) {
-  errors.push("portable skill duplicates the canonical doctrine");
 }
 
 if (errors.length > 0) {
