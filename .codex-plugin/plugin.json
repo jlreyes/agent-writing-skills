@@ -1,7 +1,7 @@
 {
   "name": "agent-writing",
-  "version": "0.4.0+codex.20261030",
-  "description": "Reader-first writing guidance for meaningful prose addressed to humans or agents.",
+  "version": "0.5.0+codex.20261104",
+  "description": "Reader-first writing guidance with a plain-language writer pass for final artifacts.",
   "author": {
     "name": "James Reyes"
   },
@@ -18,7 +18,7 @@
   "interface": {
     "displayName": "Agent Writing",
     "shortDescription": "Reader-first writing for humans and agents.",
-    "longDescription": "Portable reader-first guidance for meaningful prose addressed to humans or agents.",
+    "longDescription": "Draft in the working agent, then use a fresh writer to rewrite final artifacts in plain language.",
     "developerName": "James Reyes",
     "category": "Productivity",
     "capabilities": [

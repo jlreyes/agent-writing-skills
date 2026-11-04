@@ -15,7 +15,7 @@ architecture or placement of durable documentation.
 ## Contents
 
 - [Establish the control surface](#establish-the-control-surface)
-- [Author prose in the working context](#author-prose-in-the-working-context)
+- [Draft in the working context](#draft-in-the-working-context)
 - [Keep shared skills portable](#keep-shared-skills-portable)
 - [Make descriptions dispatch correctly](#make-descriptions-dispatch-correctly)
 - [Spend always-loaded context carefully](#spend-always-loaded-context-carefully)
@@ -41,12 +41,12 @@ Before editing, identify:
 Do not add a rule when a tool, type, test, schema, or repository structure can
 make the desired behavior automatic and observable.
 
-## Author prose in the working context
+## Draft in the working context
 
-The agent doing the work owns authorship, material revision, and finalization.
-It already holds the facts, decisions, evidence, and uncertainty the prose must
-carry, so it writes the prose directly instead of handing it to a separate
-writer agent.
+The agent doing the work holds the facts, decisions, evidence, and uncertainty,
+so it writes the draft and remains responsible for its accuracy. The
+[final-artifact workflow](final-artifacts.md) owns the writer's plain-language
+pass before delivery.
 
 The more durable and behavior-shaping the prose, the more care it needs. A
 material mistake in an ordinary user response is often contained to one
@@ -60,9 +60,9 @@ instruction changes what an agent will do. When a document does both, apply
 this reference to the behavior-bearing parts and `technical-documentation.md`
 to the explanatory parts.
 
-Keep independent code, test, and domain review separate from authorship.
-Reviewers assess the implementation or instrument; the authoring agent makes
-the resulting prose changes.
+Keep independent code, test, and domain review separate from the writer pass.
+Reviewers assess the implementation or instrument; the working agent resolves
+their findings before giving the finished draft to the writer.
 
 ## Keep shared skills portable
 
@@ -194,9 +194,9 @@ contract, escalation valve, and executable-mechanism check are package policy
 derived from observed agent failures. Keep them only while they continue to
 prevent those failures; do not attribute them to Anthropic.
 
-Working-context authorship is also package policy. It replaced a separate
-writer agent to remove handoff latency; revisit it if inline prose quality
-drops.
+Drafting in context and using a writer for final artifacts are also package
+policy. They keep handoffs out of ordinary chat and working drafts while giving
+delivered prose a separate plain-language pass.
 
 Primary sources:
 

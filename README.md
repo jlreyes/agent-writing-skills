@@ -2,20 +2,22 @@
 
 [![skills.sh](https://skills.sh/b/jlreyes/agent-writing-skills)](https://skills.sh/jlreyes/agent-writing-skills)
 
-Agent Writing gives coding agents one reader-first writing skill. The agent
-doing the work loads the skill and writes the prose itself; the plugin does not
-include a separate writer agent.
+Agent Writing helps coding agents write for their readers. The agent doing the
+work drafts the text and checks its accuracy. A fresh writer gives substantive
+final artifacts one plain-language rewrite before delivery. Ordinary chat and
+working drafts stay with the agent doing the work.
 
 The repository keeps one architecture across runtimes:
 
 | Component | Purpose |
 | --- | --- |
-| `skills/writing/` | The portable skill and its progressively loaded references |
+| `skills/writing/` | The shared writing skill and its references |
+| `agents/writer.md` | Claude writer, included with the plugin |
+| `.codex/agents/writer.toml` | Native Codex writer, installed separately |
 | `.claude-plugin/` and `.codex-plugin/` | Native manifests for the same plugin bundle |
 
-The canonical authorship doctrine lives in
-[`agent-rules.md`](skills/writing/references/agent-rules.md). The skill itself
-stays reader-first and portable.
+The [final-artifact workflow](skills/writing/references/final-artifacts.md)
+defines the handoff and the accuracy check before delivery.
 
 ## Install
 
@@ -44,7 +46,16 @@ codex plugin marketplace add jlreyes/agent-writing-skills
 codex plugin add agent-writing@agent-writing
 ```
 
-Start a new session after installing or updating the plugin.
+Codex loads the skill from the plugin and the writer as a native custom agent.
+From an updated checkout of this repository, install the writer:
+
+```bash
+node scripts/install-codex-agent.mjs
+```
+
+The installer writes `${CODEX_HOME:-~/.codex}/agents/writer.toml`. It refuses to
+replace a different existing writer unless you pass `--force`. Start a new
+session after installing or updating the plugin and writer.
 
 The skill can also be installed independently:
 
@@ -55,9 +66,9 @@ npx skills add jlreyes/agent-writing-skills --skill writing
 ## Release and update
 
 A writing release keeps one portable `skills/writing/` tree current across the
-Claude plugin, Codex plugin, and skills.sh project copies. Use the native
-installer or runtime command for each channel; do not create a separate sync
-script or a consumer-specific copy of the writing instructions.
+Claude plugin, Codex plugin, native Codex writer, and skills.sh project copies.
+Use the native installer or runtime command for each channel; do not create a
+separate sync script or a consumer-specific copy of the writing instructions.
 
 Update installed plugin channels with their native CLIs:
 
@@ -68,14 +79,21 @@ codex plugin marketplace upgrade agent-writing
 codex plugin add agent-writing@agent-writing
 ```
 
+From an updated source checkout, update the native Codex writer:
+
+```bash
+node scripts/install-codex-agent.mjs --force
+```
+
 From the consumer project, update its skills.sh copy:
 
 ```bash
 npx --yes skills update writing -p -y
 ```
 
-Versions before 0.4.0 also shipped a writer agent. If you installed its native
-Codex copy, delete `${CODEX_HOME:-~/.codex}/agents/writer.toml` when upgrading.
+Version 0.5.0 restores the writer removed in 0.4.0, with a narrower job: rewrite
+completed final artifacts. Replace any pre-0.4.0 native Codex writer with the
+current adapter so it does not take over ordinary drafting.
 
 After each release, compare the full installed `skills/writing/` reference tree
 with the source tree and run the relevant discovery and behavior checks in every
@@ -83,14 +101,26 @@ supported runtime.
 
 ## Use
 
-The agent doing the work authors, revises, and finalizes the prose with the
-skill loaded. The canonical
-[`agent-rules.md`](skills/writing/references/agent-rules.md) reference defines
-that authorship rule and keeps independent code, test, and domain review
-separate from it.
+The working agent drafts the text and resolves review findings. It then gives
+one fresh writer the draft, audience, purpose, required facts and
+qualifications, and designated sources, without the full working conversation.
+The writer returns replacement prose. The working agent checks it against the
+sources and corrects factual drift before delivery.
 
-Skill descriptions guide model selection; they are not enforcement hooks. When
-skill use must be deterministic in either runtime, request
+Use the writer for substantive final Markdown documents, reports, plans, PR
+descriptions, and substantive comments, including artifacts returned directly
+in chat. Keep ordinary replies, progress updates, internal notes, intermediate
+drafts, trivial labels, and mechanical edits with the working agent. Code,
+test, and domain reviews remain separate.
+
+Claude exposes `agent-writing:writer`; Codex exposes the natively installed
+`writer`. In Codex, request a fresh writer with `fork_turns` set to `none`.
+Neither adapter publishes or submits the result. The Claude adapter uses Sonnet
+at medium effort; the Codex adapter uses GPT-6.1 Terra at medium effort.
+
+The model uses skill descriptions to decide when to load a skill; descriptions
+do not enforce activation. When skill use must be deterministic in either
+runtime, request
 `agent-writing:writing` explicitly. A repository instruction can make that
 request durable for one project; the plugin does not silently change global
 Codex instructions.
@@ -109,6 +139,7 @@ whose artifact or operation matches the writing job:
 | `agent-rules.md` | Behavior-bearing AGENTS.md, CLAUDE.md, skills, prompts, and policy |
 | `editing.md` | Revisions that must preserve unrelated material |
 | `style.md` | Universal prose judgment and final style pass |
+| `final-artifacts.md` | When to use the writer, what to hand over, and what to check |
 
 ## Validate and evaluate
 
@@ -127,14 +158,16 @@ node scripts/run-boundary-eval.mjs claude
 node scripts/run-boundary-eval.mjs codex
 ```
 
-Both suites prove fresh-session skill discovery and activation, universal style
-loading, routed references read by the authoring session itself, and that
-trivial prose skips the skill. Except where the survey guidance calls for
-independent reviewers, they fail if the session launches a subagent. Both also
-check that the durable-instruction case stays within its designated source.
-Claude activates the skill implicitly for that case; the Codex suite uses an
-explicit skill request. `evals/cases.json` remains the optional deeper Claude
-content corpus. Live evals are intentionally excluded from unauthenticated CI.
+The suites check fresh-session discovery, reference loading, and writer use
+for final artifacts. They reject subagent use for ordinary replies, working
+drafts, and trivial prose. The final-instruction case also checks that the
+writer loads the applicable references and avoids the unrelated fixture.
+Codex cases explicitly request the native writer; Claude selects its plugin writer from the skill's
+guidance. The suites check behavior. Inspect the returned prose to assess its
+writing quality too.
+
+`evals/cases.json` remains the optional deeper Claude content corpus. Live
+evals are intentionally excluded from unauthenticated CI.
 
 ## License
 

@@ -17,7 +17,7 @@ if (!testCase) {
 }
 
 const prompt = [
-  "Use the agent-writing:writing skill to write the final user-facing response yourself.",
+  "Use the agent-writing:writing skill. Draft in the working agent and apply its final-artifact workflow when the requested output is a substantive final artifact; ordinary chat replies stay inline.",
   "Treat the following handoff as the complete source material, then return only the response:",
   testCase.handoff,
 ].join("\n\n");
@@ -30,12 +30,13 @@ const run = spawnSync(
     "-p", prompt,
     "--model", process.env.EVAL_MODEL ?? "sonnet",
     "--effort", process.env.EVAL_EFFORT ?? "medium",
-    "--tools", "Read,Skill",
+    "--tools", "Agent,Read,Skill",
     "--setting-sources", "",
     "--strict-mcp-config",
     "--mcp-config", '{"mcpServers":{}}',
     "--output-format", "stream-json",
     "--verbose",
+    "--forward-subagent-text",
     "--no-session-persistence",
     "--max-budget-usd", process.env.EVAL_MAX_BUDGET_USD ?? "1.00",
   ],
