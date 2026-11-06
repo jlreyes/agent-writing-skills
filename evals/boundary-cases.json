@@ -80,6 +80,26 @@
     "mustInclude": "make check"
   },
   {
+    "id": "successive-final-pr-descriptions",
+    "prompt": "Use the installed agent-writing:writing skill. Complete two final PR descriptions in order. First finalize this draft for a maintainer who has not seen the work: Authentication-state transition enforcement stops deployment after the first authentication failure instead of retrying. The user must sign in before another attempt. make check passed; a real deployment was not run because the CLI has no authenticated account. Complete its final writing pass before starting the next version. Then treat this as a substantive revision request: the user has signed in, a real staging deployment passed, and production deployment has not been attempted. Finalize the revised description while retaining make check and the production limit. Return both completed descriptions, labeled Initial and Revised. Do not publish anything.",
+    "expectSkill": true,
+    "expectWriter": true,
+    "expectedWriterPasses": 2,
+    "expectedReads": [
+      "references/style.md",
+      "references/final-artifacts.md"
+    ],
+    "codexExpectedReads": [
+      "skills/writing/SKILL.md"
+    ],
+    "readCanaries": {
+      "references/style.md": "# Universal style pass",
+      "references/final-artifacts.md": "# Writer pass for final artifacts",
+      "skills/writing/SKILL.md": "# Write for readers"
+    },
+    "mustInclude": "make check"
+  },
+  {
     "id": "trivial-prose-inline",
     "prompt": "Replace the button label `Retry` with `Try again`. Return only the replacement label.",
     "expectSkill": false,

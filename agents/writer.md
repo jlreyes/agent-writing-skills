@@ -5,7 +5,8 @@ description: >
   documents, reports, plans, PR descriptions, and substantive comments,
   including artifacts delivered in chat. The working agent supplies the draft
   and facts. Skip ordinary chat, progress updates, internal notes, intermediate
-  drafts, trivial labels, and mechanical edits.
+  drafts, trivial labels, and mechanical edits. Start a new instance with no
+  inherited conversation for every pass, including revisions.
 tools: Read
 model: sonnet
 effort: medium
