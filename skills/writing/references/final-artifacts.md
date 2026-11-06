@@ -23,10 +23,19 @@ and its applicable references. It reads only the handoff, designated sources,
 and writing guidance. It flags missing information rather than researching or
 guessing.
 
+Also list the names coined during the work, each with what it stands for in
+plain words: labels for groups of changes, for states the work reached, and
+for checks it passed. The working agent is the only party who knows which
+names it invented; to the writer, a coined label used consistently looks like
+an established term. When the handoff has no such list, the writer applies the
+skill's checks under "Name what happened, not your label for it" to every term
+that carries the point.
+
 The writer replaces the draft's language, rather than just tidying it. Treat
 the wording as disposable while preserving its meaning. Rebuild awkward
 sentences around the person or component doing the action; do not keep
-abstract labels just because they appeared in the draft.
+abstract labels because they appeared in the draft or because the sources use
+them consistently.
 
 Return replacement prose. Lead with the point, explain who does
 what and why it matters, use familiar words and active verbs, and remove

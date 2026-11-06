@@ -15,7 +15,9 @@ unless the reader genuinely needs that navigation. Prefer concrete actors,
 actions, and consequences to broad company categories, market positioning, and
 abstract business justification.
 
-Keep one stable term for one concept. Use lists for parallel items and prose
+Keep one stable term for one concept, and take that term from the reader's
+vocabulary. A label coined during the work does not earn stability by
+appearing throughout the draft. Use lists for parallel items and prose
 when sequence, causality, or qualification matters. Vary sentence and paragraph
 length when it improves the reasoning, not to perform a style.
 
@@ -30,5 +32,7 @@ organization after swapping names, and whether the structure helps the reader
 or merely performs professionalism. When these signals co-occur, diagnose the
 shared register mismatch; in a cold review, report a material mismatch so
 factual findings do not crowd it out. Formal structure and domain terms belong
-when the genre, audience, or precision requires them. Preserve useful voice and
+when the genre, audience, or precision requires them. A domain term is one the
+reader would recognize outside this document; a label coined during the work
+is not. Preserve useful voice and
 make the smallest edit that removes friction.
