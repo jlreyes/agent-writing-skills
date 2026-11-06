@@ -1,7 +1,9 @@
 # Editing existing documents
 
 Treat the existing document as intentional. Let the requested change define
-the edit scope; preserve everything else by default.
+the edit scope; preserve everything else by default. Scope preservation protects
+unrelated content; within an authorized rewrite, preserve supported meaning
+rather than opaque wording.
 
 Prefer a targeted patch over a rewrite. The source material should include
 enough of the whole document to establish the changed section's role and
