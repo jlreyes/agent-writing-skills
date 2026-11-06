@@ -157,6 +157,8 @@ Then load every artifact reference that matches the writing job:
 - Content-oriented README, tutorial, how-to, reference, or explanatory
   documentation:
   [technical documentation](references/technical-documentation.md)
+- Pull request titles, descriptions, and validation comments:
+  [pull requests](references/pull-requests.md)
 - RFCs, architecture plans, design documents, or implementation plans:
   [technical plans](references/technical-plans.md)
 - Product surveys, screeners, questionnaires, polls, or in-product feedback:
