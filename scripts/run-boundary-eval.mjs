@@ -191,8 +191,12 @@ async function runClaude() {
       if (testCase.forbidSubagents && subagentLaunched) {
         issues.push("writing was handed to a subagent");
       }
-      if (testCase.expectWriter && writerCalls.length !== 1) {
-        issues.push(`expected one final writer pass, observed ${writerCalls.length}`);
+      const expectedWriterPasses = testCase.expectedWriterPasses ?? 1;
+      if (testCase.expectWriter && writerCalls.length !== expectedWriterPasses) {
+        issues.push(`expected ${expectedWriterPasses} final writer passes, observed ${writerCalls.length}`);
+      }
+      if (writerCalls.some((call) => call.input?.resume)) {
+        issues.push("a writer resumed a previous context");
       }
       for (const expected of testCase.expectedReads ?? []) {
         const paths = testCase.expectWriter && expected.startsWith("references/")
@@ -411,13 +415,10 @@ async function runCodex() {
         ? await readChildren(resolve(installed.configDir, "sessions"), threadId)
         : [];
       const writers = children.filter((child) => child.role === "writer");
-      const child = writers[0]?.events ?? [];
       const writerSpawns = spawnCalls.filter((call) =>
         JSON.parse(call.payload.arguments).agent_type === "writer",
       );
-      const spawnArguments = writerSpawns[0]
-        ? JSON.parse(writerSpawns[0].payload.arguments) : {};
-      const childToolCalls = completedToolCalls(child);
+      const childToolCalls = writers.flatMap((writer) => completedToolCalls(writer.events));
       const parentToolCalls = completedToolCalls(parent);
       const observedToolCalls = [
         ...streamToolCalls,
@@ -444,13 +445,17 @@ async function runCodex() {
         issues.push("writing was handed to a subagent");
       }
       if (testCase.expectWriter) {
-        if (writerSpawns.length !== 1 || writers.length !== 1) {
-          issues.push(`expected one native writer, observed ${writerSpawns.length} writer spawns and ${writers.length} writer rollouts`);
+        const expectedWriterPasses = testCase.expectedWriterPasses ?? 1;
+        if (writerSpawns.length !== expectedWriterPasses || writers.length !== expectedWriterPasses) {
+          issues.push(`expected ${expectedWriterPasses} native writers, observed ${writerSpawns.length} writer spawns and ${writers.length} writer rollouts`);
         }
-        if (spawnArguments.fork_turns !== "none") {
+        if (writerSpawns.some((call) => JSON.parse(call.payload.arguments).fork_turns !== "none")) {
           issues.push("writer did not start with a fresh context");
         }
-        if (completedToolCalls(child).some((call) => call.name === "spawn_agent")) {
+        if (writers.some((writer) => writer.events.filter((event) => event.type === "event_msg" && event.payload?.type === "task_started").length > 1)) {
+          issues.push("a writer context was reused for another task");
+        }
+        if (childToolCalls.some((call) => call.name === "spawn_agent")) {
           issues.push("writer delegated recursively");
         }
       }

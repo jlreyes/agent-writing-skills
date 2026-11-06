@@ -1,6 +1,6 @@
 ---
 name: writing
-description: Use for every meaningful prose task for a human or agent, including user responses, README/docs, surveys and questionnaires, AGENTS.md/CLAUDE.md, skills, prompts, plans, reports, PR text, substantive comments, and docstrings. Draft in the working agent; use a fresh writer for a plain-language pass on final artifacts. Keep ordinary chat and intermediate drafts inline; skip trivial labels and mechanical wording changes.
+description: Use for every meaningful prose task for a human or agent, including user responses, README/docs, surveys and questionnaires, AGENTS.md/CLAUDE.md, skills, prompts, plans, reports, PR text, substantive comments, and docstrings. Draft in the working agent; start a new writer with no inherited conversation for each final-artifact pass. Keep ordinary chat and intermediate drafts inline; skip trivial labels and mechanical wording changes.
 ---
 
 # Write for readers

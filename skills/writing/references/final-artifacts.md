@@ -10,8 +10,14 @@ Keep ordinary chat replies, progress updates, internal notes, intermediate
 drafts, trivial labels, and mechanical edits with the working agent. Call the
 writer once the facts and decisions are settled enough to deliver.
 
-Start the writer without the full working conversation. Give it the draft,
-audience and purpose, required facts and qualifications, designated source
+Start a new writer with no inherited conversation for every pass. Never reuse,
+resume, or send another writing task to a writer that has already completed a
+pass. This also applies to later revisions of the same artifact: send the
+updated draft and facts to another new writer. Reusing the earlier writer
+retains its previous framing and defeats the cold-reader pass.
+
+Give the writer the draft, audience and purpose, required facts and
+qualifications, designated source
 passages, and required links or exact text. The writer loads the writing skill
 and its applicable references. It reads only the handoff, designated sources,
 and writing guidance. It flags missing information rather than researching or
@@ -35,6 +41,8 @@ substantive change leaves new prose to rewrite. Keep independent code, test,
 and domain reviews with their existing owners; the writer pass does not
 replace them.
 
-The writer completes the rewrite without delegating again. It does not
+The writer handles one pass. If it has already completed a writing pass in
+this session, it reports that a new writer is required instead of performing
+another rewrite. It completes the rewrite without delegating again. It does not
 publish or submit anything, and the handoff grants no new authority to do so.
 If a writer is unavailable, tell the user the pass could not be completed.

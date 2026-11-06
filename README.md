@@ -114,7 +114,9 @@ drafts, trivial labels, and mechanical edits with the working agent. Code,
 test, and domain reviews remain separate.
 
 Claude exposes `agent-writing:writer`; Codex exposes the natively installed
-`writer`. In Codex, request a fresh writer with `fork_turns` set to `none`.
+`writer`. Start a new writer for every pass, including later revisions of the
+same artifact; do not resume or send follow-up writing tasks to a previous
+writer. In Codex, set `fork_turns` to `none` on each new writer.
 Neither adapter publishes or submits the result. The Claude adapter uses Sonnet
 at medium effort; the Codex adapter uses GPT-6.1 Terra at medium effort.
 
