@@ -66,7 +66,8 @@
     "expectedReads": [
       "references/style.md",
       "references/final-artifacts.md",
-      "references/editing.md"
+      "references/editing.md",
+      "references/pull-requests.md"
     ],
     "codexExpectedReads": [
       "skills/writing/SKILL.md"
@@ -75,7 +76,8 @@
       "references/style.md": "# Universal style pass",
       "references/final-artifacts.md": "# Writer pass for final artifacts",
       "references/editing.md": "# Editing existing documents",
-      "skills/writing/SKILL.md": "# Write for readers"
+      "skills/writing/SKILL.md": "# Write for readers",
+      "references/pull-requests.md": "# Pull requests"
     },
     "mustInclude": "make check"
   },
