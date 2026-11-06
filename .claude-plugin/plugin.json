@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "agent-writing",
   "displayName": "Agent Writing",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Reader-first writing guidance with a plain-language writer pass for final artifacts.",
   "author": {
     "name": "James Reyes"

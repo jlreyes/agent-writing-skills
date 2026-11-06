@@ -40,6 +40,59 @@ Check what the reader could explain after reading the result. If they can only
 repeat your labels, or must supply missing relationships, the explanation is
 unfinished.
 
+## Name what happened, not your label for it
+
+Work produces private vocabulary. While researching, building, or debugging,
+an agent coins names for the things it is juggling ("the fallback path", "the
+hygiene pass", "sync parity") and words for how far along they are
+("hardened", "validated", "coverage"). Repetition makes those words feel like
+ordinary vocabulary to anyone who has read the draft and its sources. That now
+includes you. The reader has never seen them.
+
+A reader can use only a name they already own: a name from the product, the
+codebase, or the field, or a word they would use themselves. A label that
+exists only in this draft and the work behind it tells them how the writer
+filed the work, not what the work is. Report the event first: who or what did
+what, to what. Then say how sure anyone is.
+
+You cannot find these labels by asking whether a term feels familiar; after
+reading the sources, it will. Check each noun phrase and verb that carries the
+point instead:
+
+- **Where would the reader have met this term?** If the honest answer is "in
+  this draft or the work behind it", it is a working label, however
+  consistently the sources use it. Appearing in a heading, a file name, or
+  every paragraph does not make a label the reader's. Replace it with what it
+  stands for, said with the actor and the action: "the retry cleanup" becomes
+  "delete jobs that failed three times".
+- **Of what? For what?** Words such as "parity", "coverage", "hygiene",
+  "alignment", "support", and "foundation" name a role or a state and leave
+  the reader to supply the rest. Say the thing itself.
+- **What action is inside the noun?** When a generic verb such as "add",
+  "establish", "enable", or "improve" props up an abstract noun, move the real
+  action into the verb: "add migration support" becomes "migrate saved drafts
+  to the new format".
+- **Is this the work, or the checking of the work?** "Validate", "harden",
+  and "certify" describe how the author tested or judged a change. Say what
+  the change does; report the testing separately, as evidence.
+
+These are checks, not word bans. A term the reader already uses passes however
+abstract it looks.
+
+Replacing a working label with what the sources say it stands for adds no
+facts; it restates them. This outranks keeping the draft's wording, keeping a
+term stable, and making the smallest edit: those rules protect the reader's
+terms and unrelated content, not the writer's labels. If the sources do not
+let you say what a label stands for, that is a missing fact. Flag it instead
+of passing the label through.
+
+### Titles, headings, and opening lines
+
+The reader meets these with nothing established, often in a list beside
+unrelated items. Use only names the reader already owns, and say what changed:
+an action and the thing acted on. Leave status, scope limits, and test results
+to the body unless the reader must act on them before reading further.
+
 ## Build from the reader outward
 
 Lead with the information of highest consequence. Give the reader context
@@ -126,6 +179,9 @@ they can tell, without reconstructing the writer's process:
 - what matters;
 - why it matters;
 - what is known versus uncertain;
-- what they need to do next.
+- what they need to do next;
+- what each name in the title, headings, and opening paragraph refers to.
 
-If not, repair the information order before polishing sentences.
+If not, repair the information order before polishing sentences. Imagination
+cannot settle the last item once you have read the sources; settle it with the
+checks under "Name what happened, not your label for it".
