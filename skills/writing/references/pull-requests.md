@@ -24,9 +24,6 @@ revision and environment for each result, and distinguish older evidence from
 the current implementation. Preserve failed checks, missing artifacts,
 and other limits that affect the reviewer's confidence.
 
-The testing skill and repository testing context own evidence capture,
-packaging, and upload procedures. When that testing skill is available, use its
-[review-artifact reference](https://github.com/jlreyes/ai-testing-standards/blob/main/skills/testing/references/review-artifacts.md).
 When writing from supplied evidence, preserve its scope and gaps; do not invent
 a recording, result, or download link to complete a section. A checklist entry
 such as “tested” cannot replace the evidence and observed result.
