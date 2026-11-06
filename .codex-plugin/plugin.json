@@ -1,6 +1,6 @@
 {
   "name": "agent-writing",
-  "version": "0.5.1+codex.20261106",
+  "version": "0.5.2+codex.20261106",
   "description": "Reader-first writing guidance with a plain-language writer pass for final artifacts.",
   "author": {
     "name": "James Reyes"

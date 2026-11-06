@@ -23,6 +23,23 @@ information available to the upstream agent and information available to the
 reader. Never assume the reader witnessed the research, implementation,
 debugging, tool use, rejected alternatives, or intermediate reasoning.
 
+## Establish the claim before rewriting
+
+Before rewriting, establish the claim beneath the wording. Identify what the
+source says happened, who or what it concerns, and the consequence or distinction
+the reader needs. Write from that understanding, making the relevant actions and
+relationships explicit. Preserve supported meaning, scope, and uncertainty;
+replace labels and sentence structures that obscure them.
+
+Use abstractions when the intended reader can connect them to the relevant facts.
+When a label could describe materially different actions or outcomes, explain or
+replace it. Do not invent specificity where the source is unclear.
+
+Organize details so each supports, explains, or qualifies an identifiable point.
+Check what the reader could explain after reading the result. If they can only
+repeat your labels, or must supply missing relationships, the explanation is
+unfinished.
+
 ## Build from the reader outward
 
 Lead with the information of highest consequence. Give the reader context
