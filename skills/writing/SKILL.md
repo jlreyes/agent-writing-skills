@@ -149,7 +149,7 @@ use the writer, what to hand over, and how to check the replacement prose.
 It also applies to artifacts returned directly in chat. Ordinary conversational
 replies and intermediate drafts stay with the working agent.
 
-Then load every artifact reference that matches the writing job:
+Then load every artifact reference that matches the writing job, again whenever the job changes:
 
 - Report-shaped artifacts such as substantive analyses, investigation or audit
   reports, research syntheses, decision briefs, and formal findings reports:
