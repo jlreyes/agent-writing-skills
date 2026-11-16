@@ -2,7 +2,8 @@
 
 Write for a reviewer who has not seen the conversation. Lead with the concrete
 problem and the behavior the change produces. Use a before/after example when
-it helps explain the trigger and result. The title should name what changes.
+it helps explain the trigger and result. The title should name what changes,
+and it goes to the writer with the description.
 
 Match the description to the change: a small change may need only a paragraph
 and evidence of validation. Use the repository's template when one exists, but
