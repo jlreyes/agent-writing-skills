@@ -1,6 +1,6 @@
 ---
 name: writing
-description: Use for every meaningful prose task for a human or agent, including user responses, README/docs, surveys and questionnaires, AGENTS.md/CLAUDE.md, skills, prompts, plans, reports, PR text, substantive comments, and docstrings. Draft in the working agent; start a new writer with no inherited conversation for each final-artifact pass. Keep ordinary chat and intermediate drafts inline; skip trivial labels and mechanical wording changes.
+description: Use for every meaningful prose task for a human or agent, including user responses, README/docs, surveys and questionnaires, AGENTS.md/CLAUDE.md, skills, prompts, plans, reports, PR text, substantive comments, and docstrings. Write ordinary chat, short responses, and intermediate drafts in the working agent; for a substantive final artifact, give a new writer with no inherited conversation a brief instead. Skip trivial labels and mechanical wording changes.
 ---
 
 # Write for readers
@@ -145,7 +145,7 @@ judgment: preserve useful voice and do not turn its examples into word bans.
 
 Before delivering a substantive final artifact, load the
 [final-artifact workflow](references/final-artifacts.md). It defines when to
-use the writer, what to hand over, and how to check the replacement prose.
+use the writer, what to hand over, and how to check the artifact.
 It also applies to artifacts returned directly in chat. Ordinary conversational
 replies and intermediate drafts stay with the working agent.
 

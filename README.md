@@ -3,9 +3,9 @@
 [![skills.sh](https://skills.sh/b/jlreyes/agent-writing-skills)](https://skills.sh/jlreyes/agent-writing-skills)
 
 Agent Writing helps coding agents write for their readers. The agent doing the
-work drafts the text and checks its accuracy. A fresh writer gives substantive
-final artifacts one plain-language rewrite before delivery. Ordinary chat and
-working drafts stay with the agent doing the work.
+work checks the text for accuracy. A fresh writer writes each substantive final
+artifact in plain language from the working agent's brief before delivery.
+Ordinary chat and working drafts stay with the agent doing the work.
 
 The repository keeps one architecture across runtimes:
 
@@ -93,7 +93,9 @@ npx --yes skills update writing -p -y
 
 Version 0.5.0 restores the writer removed in 0.4.0, with a narrower job: rewrite
 completed final artifacts. Replace any pre-0.4.0 native Codex writer with the
-current adapter so it does not take over ordinary drafting.
+current adapter so it does not take over ordinary drafting. In version 0.5.6,
+the writer writes each final artifact from a brief. Reinstall the native Codex
+writer after the update.
 
 After each release, compare the full installed `skills/writing/` reference tree
 with the source tree and run the relevant discovery and behavior checks in every
@@ -101,11 +103,11 @@ supported runtime.
 
 ## Use
 
-The working agent drafts the text and resolves review findings. It then gives
-one fresh writer the draft, audience, purpose, required facts and
-qualifications, and designated sources, without the full working conversation.
-The writer returns replacement prose. The working agent checks it against the
-sources and corrects factual drift before delivery.
+The working agent resolves review findings. It then gives one fresh writer a
+brief without the full working conversation. The brief names the reader, the
+sources that hold what was verified, what was not checked, and any fixed
+requirements. The writer writes the artifact. The working agent checks it
+against the sources and corrects factual drift before delivery.
 
 Use the writer for substantive final Markdown documents, reports, plans, PR
 descriptions, and substantive comments, including artifacts returned directly
@@ -165,6 +167,8 @@ The suites check fresh-session discovery, reference loading, and writer use
 for final artifacts. They reject subagent use for ordinary replies, working
 drafts, and trivial prose. The final-instruction case also checks that the
 writer loads the applicable references and avoids the unrelated fixture.
+The report case checks that the handoff is a brief and that the writer reads
+the source itself.
 Codex cases explicitly request the native writer; Claude selects its plugin writer from the skill's
 guidance. The suites check behavior. Inspect the returned prose to assess its
 writing quality too.
