@@ -59,8 +59,8 @@
   },
   {
     "id": "final-pr-description",
-    "prompt": "Use the installed agent-writing:writing skill. Produce the final PR description from this draft for a maintainer who has not seen the work: \"Authentication-state transition enforcement now aborts the deployment at the first authentication failure instead of retrying. The user must sign in before another attempt. Validation: make check passed. A real deployment was not run because the CLI has no authenticated account. Nothing was published.\" Keep every material fact and verification limit. Return only the final PR description.",
-    "codexPromptPrefix": "Draft in the working agent, then give the completed draft to the installed native writer role in a fresh context with fork_turns set to none for the final plain-language pass. Check its replacement against the source before returning it.",
+    "prompt": "Use the installed agent-writing:writing skill. Produce the final PR description for a maintainer from these verified facts. Deployment now stops at the first authentication failure. It previously retried. The user must sign in before another attempt. make check passed. A real deployment was not run because the CLI has no authenticated account. Nothing was published. Keep every material fact and verification limit. Return only the final PR description.",
+    "codexPromptPrefix": "Give the verified facts and verification limits to the installed native writer role in a fresh context with fork_turns set to none. Ask it to compose the final PR description and check it against the source before returning it.",
     "expectSkill": true,
     "expectWriter": true,
     "expectedReads": [
@@ -83,7 +83,7 @@
   },
   {
     "id": "successive-final-pr-descriptions",
-    "prompt": "Use the installed agent-writing:writing skill. Complete two final PR descriptions in order. First finalize this draft for a maintainer who has not seen the work: Authentication-state transition enforcement stops deployment after the first authentication failure instead of retrying. The user must sign in before another attempt. make check passed; a real deployment was not run because the CLI has no authenticated account. Complete its final writing pass before starting the next version. Then treat this as a substantive revision request: the user has signed in, a real staging deployment passed, and production deployment has not been attempted. Finalize the revised description while retaining make check and the production limit. Return both completed descriptions, labeled Initial and Revised. Do not publish anything.",
+    "prompt": "Use the installed agent-writing:writing skill. Complete two final PR descriptions in order. First use these verified facts to write a description for a maintainer who has not seen the work. Deployment stops after the first authentication failure. It previously retried. The user must sign in before another attempt. make check passed; a real deployment was not run because the CLI has no authenticated account. Complete its final writing pass before starting the next version. Then treat this as a substantive revision request: the user has signed in, a real staging deployment passed, and production deployment has not been attempted. Finalize the revised description while retaining make check and the production limit. Return both completed descriptions, labeled Initial and Revised. Do not publish anything.",
     "expectSkill": true,
     "expectWriter": true,
     "expectedWriterPasses": 2,

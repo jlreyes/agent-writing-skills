@@ -1,6 +1,6 @@
 {
   "name": "agent-writing",
-  "version": "0.5.5+codex.20261116",
+  "version": "0.5.6+codex.20261117",
   "description": "Reader-first writing guidance with a plain-language writer pass for final artifacts.",
   "author": {
     "name": "James Reyes"
@@ -18,7 +18,7 @@
   "interface": {
     "displayName": "Agent Writing",
     "shortDescription": "Reader-first writing for humans and agents.",
-    "longDescription": "Draft in the working agent, then use a fresh writer to rewrite final artifacts in plain language.",
+    "longDescription": "Use a fresh writer to compose pull request descriptions from verified facts and rewrite other final artifacts in plain language.",
     "developerName": "James Reyes",
     "category": "Productivity",
     "capabilities": [

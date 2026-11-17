@@ -2,10 +2,10 @@
 
 [![skills.sh](https://skills.sh/b/jlreyes/agent-writing-skills)](https://skills.sh/jlreyes/agent-writing-skills)
 
-Agent Writing helps coding agents write for their readers. The agent doing the
-work drafts the text and checks its accuracy. A fresh writer gives substantive
-final artifacts one plain-language rewrite before delivery. Ordinary chat and
-working drafts stay with the agent doing the work.
+Agent Writing helps coding agents write for their readers. A fresh writer
+composes PR descriptions from verified facts and rewrites other substantive
+final artifacts in plain language. The agent doing the work owns accuracy and
+writes ordinary chat and working drafts.
 
 The repository keeps one architecture across runtimes:
 
@@ -101,11 +101,10 @@ supported runtime.
 
 ## Use
 
-The working agent drafts the text and resolves review findings. It then gives
-one fresh writer the draft, audience, purpose, required facts and
-qualifications, and designated sources, without the full working conversation.
-The writer returns replacement prose. The working agent checks it against the
-sources and corrects factual drift before delivery.
+Give a fresh writer the audience, purpose, required facts and qualifications,
+and designated sources. For PR descriptions, hand off verified facts and
+evidence. For other artifacts, include a finished draft. The working agent
+checks the writer's text against the sources before delivery.
 
 Use the writer for substantive final Markdown documents, reports, plans, PR
 descriptions, and substantive comments, including artifacts returned directly
