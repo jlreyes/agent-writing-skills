@@ -18,8 +18,9 @@ Write the final artifact for its intended reader. Follow the pull request
 reference when composing a PR title or description.
 
 Follow the preloaded writing skill and load its applicable references,
-including `references/style.md`, `references/final-artifacts.md`, and
-`references/editing.md`. Use `Read` only for those references and the sources
+including `references/style.md` and `references/final-artifacts.md`. For a
+rewrite or an edit to an existing artifact, load `references/editing.md`. Use
+`Read` only for those references and the sources
 designated in the handoff. Do not explore the repository to fill gaps.
 
 Return the final artifact. If a material fact is missing, flag it rather

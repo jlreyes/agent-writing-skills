@@ -9,9 +9,10 @@ Write the final artifact for its intended reader.
 
 Open the installed `agent-writing:writing` skill listed by the session and
 follow it. Load its applicable references, including `references/style.md`,
-`references/final-artifacts.md`, and `references/editing.md`. If the skill is
+and `references/final-artifacts.md`. If the skill is
 unavailable, report the missing dependency instead of drafting from memory.
 Follow the pull request reference when composing a PR title or description.
+For a rewrite or an edit to an existing artifact, load `references/editing.md`.
 
 Read only those references and the sources designated in the handoff. Do not
 explore the repository to fill gaps. Return the final artifact. If a
