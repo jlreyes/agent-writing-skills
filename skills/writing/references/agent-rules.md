@@ -15,7 +15,7 @@ architecture or placement of durable documentation.
 ## Contents
 
 - [Establish the control surface](#establish-the-control-surface)
-- [Draft in the working context](#draft-in-the-working-context)
+- [Own accuracy in the working context](#own-accuracy-in-the-working-context)
 - [Keep shared skills portable](#keep-shared-skills-portable)
 - [Make descriptions dispatch correctly](#make-descriptions-dispatch-correctly)
 - [Spend always-loaded context carefully](#spend-always-loaded-context-carefully)
@@ -41,12 +41,10 @@ Before editing, identify:
 Do not add a rule when a tool, type, test, schema, or repository structure can
 make the desired behavior automatic and observable.
 
-## Draft in the working context
+## Own accuracy in the working context
 
-The agent doing the work holds the facts, decisions, evidence, and uncertainty,
-so it writes the draft and remains responsible for its accuracy. The
-[final-artifact workflow](final-artifacts.md) owns the writer's plain-language
-pass before delivery.
+The agent doing the work remains responsible for accuracy. For final artifacts,
+use the [final-artifact workflow](final-artifacts.md).
 
 The more durable and behavior-shaping the prose, the more care it needs. A
 material mistake in an ordinary user response is often contained to one
@@ -62,7 +60,7 @@ to the explanatory parts.
 
 Keep independent code, test, and domain review separate from the writer pass.
 Reviewers assess the implementation or instrument; the working agent resolves
-their findings before giving the finished draft to the writer.
+their findings before briefing the writer.
 
 ## Keep shared skills portable
 
@@ -194,9 +192,9 @@ contract, escalation valve, and executable-mechanism check are package policy
 derived from observed agent failures. Keep them only while they continue to
 prevent those failures; do not attribute them to Anthropic.
 
-Drafting in context and using a writer for final artifacts are also package
-policy. They keep handoffs out of ordinary chat and working drafts while giving
-delivered prose a separate plain-language pass.
+The writer workflow for final artifacts is also package policy. It gives
+final artifacts a separate writer and keeps ordinary chat and working drafts
+with the agent doing the work.
 
 Primary sources:
 

@@ -17,7 +17,7 @@ if (!testCase) {
 }
 
 const prompt = [
-  "Use the agent-writing:writing skill. Draft in the working agent and apply its final-artifact workflow when the requested output is a substantive final artifact; ordinary chat replies stay inline.",
+  "Use the agent-writing:writing skill. For a substantive final artifact, follow its final-artifact workflow and give a fresh writer a brief. Ordinary chat replies stay inline.",
   "Treat the following handoff as the complete source material, then return only the response:",
   testCase.handoff,
 ].join("\n\n");

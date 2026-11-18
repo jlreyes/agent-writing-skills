@@ -50,6 +50,10 @@ function parseJsonLines(output) {
     .map((line) => JSON.parse(line));
 }
 
+function wordCount(text) {
+  return text.split(/\s+/).filter(Boolean).length;
+}
+
 function finish(caseId, issues) {
   if (issues.length > 0) {
     failures += 1;
@@ -84,7 +88,9 @@ async function runClaude() {
   try {
     for (const testCase of cases) {
       const fixture = resolve(root, "evals/fixtures/AGENTS.md");
-      const casePrompt = testCase.prompt.replace("{fixture}", fixture);
+      const casePrompt = testCase.prompt
+        .replace("{fixture}", fixture)
+        .replace("{fixtures}", dirname(fixture));
       const prompt = testCase.claudePromptPrefix
         ? `${testCase.claudePromptPrefix}\n\n${casePrompt}`
         : casePrompt;
@@ -203,6 +209,17 @@ async function runClaude() {
           ? writerReadPaths : mainReadPaths;
         if (!paths.some((path) => path.endsWith(expected))) {
           issues.push(`responsible session did not read designated ${expected}`);
+        }
+      }
+      for (const expected of testCase.writerExpectedReads ?? []) {
+        if (!writerReadPaths.some((path) => path.endsWith(expected))) {
+          issues.push(`writer did not read designated ${expected}`);
+        }
+      }
+      for (const call of testCase.maxHandoffWords ? writerCalls : []) {
+        const words = wordCount(call.input?.prompt ?? "");
+        if (words > testCase.maxHandoffWords) {
+          issues.push(`handoff to the writer had ${words} words, more than a brief of ${testCase.maxHandoffWords}`);
         }
       }
       for (const forbidden of testCase.forbiddenReads ?? []) {
@@ -346,7 +363,9 @@ async function runCodex() {
   try {
     for (const testCase of cases) {
       const fixture = resolve(installed.projectDir, "evals/fixtures/AGENTS.md");
-      const casePrompt = testCase.prompt.replace("{fixture}", fixture);
+      const casePrompt = testCase.prompt
+        .replace("{fixture}", fixture)
+        .replace("{fixtures}", dirname(fixture));
       const prompt = testCase.codexPromptPrefix
         ? `${testCase.codexPromptPrefix}\n\n${casePrompt}`
         : casePrompt;
@@ -474,6 +493,21 @@ async function runCodex() {
           )
         ) {
           issues.push(`responsible session did not read designated ${expected}`);
+        }
+      }
+      for (const expected of testCase.writerExpectedReads ?? []) {
+        if (!hasReadEvidence(childToolCalls, expected, testCase.readCanaries?.[expected])) {
+          issues.push(`writer did not read designated ${expected}`);
+        }
+      }
+      for (const call of testCase.maxHandoffWords ? writerSpawns : []) {
+        const words = wordCount(
+          Object.values(JSON.parse(call.payload.arguments))
+            .filter((value) => typeof value === "string")
+            .join(" "),
+        );
+        if (words > testCase.maxHandoffWords) {
+          issues.push(`handoff to the writer had ${words} words, more than a brief of ${testCase.maxHandoffWords}`);
         }
       }
       for (const forbidden of testCase.forbiddenReads ?? []) {

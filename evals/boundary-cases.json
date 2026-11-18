@@ -15,7 +15,7 @@
   {
     "id": "durable-agent-instruction",
     "prompt": "Materially revise the durable agent instruction at {fixture}. The audience is coding agents. The intended behavior is to stop after the first authentication failure, ask the user to sign in, and retry only after authentication state changes. The concrete failure is an agent repeatedly retrying a deployment that cannot authenticate. Preserve unrelated instructions. This exact file is the designated source; no other project file is source material. Return only the revised file.",
-    "codexPromptPrefix": "Use the installed agent-writing:writing skill for this task. Open the plugin writing skill, references/style.md, references/agent-rules.md, and references/editing.md before drafting. Draft in the working agent, then give the completed draft to the installed native writer role in a fresh context with fork_turns set to none for the final plain-language pass. Check its replacement against the source before returning it.",
+    "codexPromptPrefix": "Use the installed agent-writing:writing skill for this task. Open the plugin writing skill, references/style.md, references/agent-rules.md, and references/editing.md first. Then give the installed native writer role a brief in a fresh context with fork_turns set to none, and have it write the revised file. Check its text against the source before returning it.",
     "expectSkill": true,
     "expectedReads": [
       "evals/fixtures/AGENTS.md",
@@ -59,14 +59,13 @@
   },
   {
     "id": "final-pr-description",
-    "prompt": "Use the installed agent-writing:writing skill. Produce the final PR description from this draft for a maintainer who has not seen the work: \"Authentication-state transition enforcement now aborts the deployment at the first authentication failure instead of retrying. The user must sign in before another attempt. Validation: make check passed. A real deployment was not run because the CLI has no authenticated account. Nothing was published.\" Keep every material fact and verification limit. Return only the final PR description.",
-    "codexPromptPrefix": "Draft in the working agent, then give the completed draft to the installed native writer role in a fresh context with fork_turns set to none for the final plain-language pass. Check its replacement against the source before returning it.",
+    "prompt": "Use the installed agent-writing:writing skill. Produce the final PR description for a maintainer who has not seen the work. These facts are verified: the deployment now stops at the first authentication failure, where it retried before. The user must sign in before another attempt. make check passed. A real deployment was not run because the CLI has no authenticated account. Nothing was published. Return only the final PR description.",
+    "codexPromptPrefix": "Give the installed native writer role a brief in a fresh context with fork_turns set to none, and have it write the description. Check its text against the facts before returning it.",
     "expectSkill": true,
     "expectWriter": true,
     "expectedReads": [
       "references/style.md",
       "references/final-artifacts.md",
-      "references/editing.md",
       "references/pull-requests.md"
     ],
     "codexExpectedReads": [
@@ -75,7 +74,6 @@
     "readCanaries": {
       "references/style.md": "# Universal style pass",
       "references/final-artifacts.md": "# Writer pass for final artifacts",
-      "references/editing.md": "# Editing existing documents",
       "skills/writing/SKILL.md": "# Write for readers",
       "references/pull-requests.md": "# Pull requests"
     },
@@ -83,7 +81,7 @@
   },
   {
     "id": "successive-final-pr-descriptions",
-    "prompt": "Use the installed agent-writing:writing skill. Complete two final PR descriptions in order. First finalize this draft for a maintainer who has not seen the work: Authentication-state transition enforcement stops deployment after the first authentication failure instead of retrying. The user must sign in before another attempt. make check passed; a real deployment was not run because the CLI has no authenticated account. Complete its final writing pass before starting the next version. Then treat this as a substantive revision request: the user has signed in, a real staging deployment passed, and production deployment has not been attempted. Finalize the revised description while retaining make check and the production limit. Return both completed descriptions, labeled Initial and Revised. Do not publish anything.",
+    "prompt": "Use the installed agent-writing:writing skill. Complete two final PR descriptions in order. First write one for a maintainer who has not seen the work, from these verified facts: deployment stops after the first authentication failure, where it retried before. The user must sign in before another attempt. make check passed; a real deployment was not run because the CLI has no authenticated account. Complete its final writing pass before starting the next version. Then treat this as a substantive revision request: the user has signed in, a real staging deployment passed, and production deployment has not been attempted. Finalize the revised description while retaining make check and the production limit. Return both completed descriptions, labeled Initial and Revised. Do not publish anything.",
     "expectSkill": true,
     "expectWriter": true,
     "expectedWriterPasses": 2,
@@ -112,14 +110,13 @@
   {
     "id": "survey-reference-routing",
     "prompt": "Draft a short external beta-user survey that will decide whether to keep a weekly summary feature. Ask about actual recent use before future intent, use ordinary language, and keep it under six respondent questions. Return only the instrument.",
-    "claudePromptPrefix": "Use the installed agent-writing:writing skill for this task. Open references/style.md and references/surveys.md before drafting.",
-    "codexPromptPrefix": "Use the installed agent-writing:writing skill for this task. Open the plugin writing skill, references/style.md, and references/surveys.md before drafting. Draft in the working agent, then give the completed draft to the installed native writer role in a fresh context with fork_turns set to none for the final plain-language pass. Check its replacement against the source before returning it.",
+    "claudePromptPrefix": "Use the installed agent-writing:writing skill for this task. Open references/style.md and references/surveys.md first.",
+    "codexPromptPrefix": "Use the installed agent-writing:writing skill for this task. Open the plugin writing skill, references/style.md, and references/surveys.md first. Then give the installed native writer role a brief in a fresh context with fork_turns set to none, and have it write the survey. Check its text against the request before returning it.",
     "expectSkill": true,
     "expectedReads": [
       "references/style.md",
       "references/surveys.md",
-      "references/final-artifacts.md",
-      "references/editing.md"
+      "references/final-artifacts.md"
     ],
     "codexExpectedReads": [
       "skills/writing/SKILL.md"
@@ -128,9 +125,35 @@
       "skills/writing/SKILL.md": "# Write for readers",
       "references/style.md": "# Universal style pass",
       "references/surveys.md": "# Surveys and questionnaires",
-      "references/final-artifacts.md": "# Writer pass for final artifacts",
-      "references/editing.md": "# Editing existing documents"
+      "references/final-artifacts.md": "# Writer pass for final artifacts"
     },
     "expectWriter": true
+  },
+  {
+    "id": "long-source-report",
+    "prompt": "Use the installed agent-writing:writing skill. Write the final report for the on-call lead, who must decide today whether to roll back release 4.2 or ship the fix. The verified findings of the investigation are in {fixtures}/investigation-notes.md. That file is the only source. Return only the report.",
+    "codexPromptPrefix": "Give the installed native writer role a brief in a fresh context with fork_turns set to none, and have it write the report. Check its text against the source before returning it.",
+    "expectSkill": true,
+    "expectWriter": true,
+    "expectedReads": [
+      "references/style.md",
+      "references/final-artifacts.md",
+      "references/reports.md"
+    ],
+    "writerExpectedReads": [
+      "evals/fixtures/investigation-notes.md"
+    ],
+    "codexExpectedReads": [
+      "skills/writing/SKILL.md"
+    ],
+    "readCanaries": {
+      "skills/writing/SKILL.md": "# Write for readers",
+      "references/style.md": "# Universal style pass",
+      "references/final-artifacts.md": "# Writer pass for final artifacts",
+      "references/reports.md": "# Reports and analyses",
+      "evals/fixtures/investigation-notes.md": "# Working notes: checkout latency after release 4.2"
+    },
+    "maxHandoffWords": 400,
+    "mustInclude": "staging"
   }
 ]
